@@ -1,0 +1,49 @@
+.DS_Store
+node_modules
+/dist
+
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# Node modules (for Vue.js frontend)
+node_modules/
+dist/
+npm-debug.log
+
+# Python virtual environment and package files (for Flask backend)
+venv/
+__pycache__/
+*.py[cod]
+*.env
+instance/
+.venv/
+Pipfile
+Pipfile.lock
+
+# OS or editor specific
+.DS_Store
+*.swp
+*~
+.vscode/
+
+# AWS credentials
+.aws/
+
