@@ -16,7 +16,7 @@ def courses():
     cur = conn.cursor()
     
 
-    # create course table if not exist
+    # create the course table if not exist
     create_course_table_query = """
     CREATE TABLE IF NOT EXISTS courses (
         course_id VARCHAR(7) PRIMARY KEY,
@@ -26,11 +26,11 @@ def courses():
     cur.execute(create_course_table_query)
     conn.commit()
 
-    # create course table if not exist
+    # create the reviews table if not exist
     create_review_table_query = """
-    CREATE TABLE IF NOT EXISTS courses (
+    CREATE TABLE IF NOT EXISTS reviews (
         course_id VARCHAR(7) PRIMARY KEY,
-        course_title VARCHAR(200)
+        reviews JSONB
     );
     """
     cur.execute(create_review_table_query)
@@ -46,8 +46,9 @@ def courses():
     
     for row in rows:
         courses_dict[row[0]] = row[1]
-    print(courses_dict)
+
     return jsonify(courses_dict)
 
 if __name__ == "__main__":
     app.run(debug=True)
+
