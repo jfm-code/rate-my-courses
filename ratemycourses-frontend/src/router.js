@@ -1,18 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import AboutPage from './components/AboutPage.vue'
+import LandingPage from './components/LandingPage.vue'
+import ReviewPage from './components/ReviewPage.vue'
 
 // Define the routes for your components
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: HelloWorld, // or another Home component if needed
+    component: LandingPage,
   },
   {
-    path: '/about',
-    name: 'About',
-    component: AboutPage, // Lazy-loaded component
+    path: '/course',
+    name: 'Review',
+    component: ReviewPage,
   }
 ]
 

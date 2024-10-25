@@ -1,12 +1,5 @@
 <template>
   <div id="app">
-    <!-- Navigation links -->
-    <nav>
-      <router-link to="/">Home</router-link>
-      <router-link to="/about">About</router-link>
-    </nav>
-    
-    <!-- The router-view renders the active route's component -->
     <router-view></router-view>
   </div>
 </template>
