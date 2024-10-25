@@ -17,12 +17,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
-nav {
-  margin-bottom: 20px;
-}
-nav a {
-  margin-right: 10px;
-}
+
 </style>
