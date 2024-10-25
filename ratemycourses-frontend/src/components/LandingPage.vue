@@ -76,7 +76,7 @@ export default {
   margin-left: 20px;
   margin-top: 30px;
   margin: 30px 0px 30px 20px;
-  color: black;
+  color: darkslategray;
   user-select: none;
   border-radius: 10px;
   border-style: solid;
