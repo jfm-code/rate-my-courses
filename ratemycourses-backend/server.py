@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-import uuid, os
+import os
 import psycopg2
 from dotenv import load_dotenv
 
@@ -8,6 +8,8 @@ load_dotenv()
 app = Flask(__name__)
 
 # api route for getting the list of courses
+# the courses function will be called when a GET request is sent to the /courses api route.
+# It will create the tables in the database if not exist, query the courses data and send it back to the front end. 
 @app.route("/courses", methods=['GET'])
 def courses():
     # connect to postgreSQL
@@ -52,7 +54,9 @@ def courses():
 
     return jsonify(courses_dict)
 
-
+# handle the request to get the review.
+# the review function will be called when a GET request is sent to the /<id>/review api route.
+# It will query the courses data based on the given course_id and send it back to the front end. 
 @app.route("/<id>/review", methods=['GET']) 
 def review(id):
     conn = psycopg2.connect(host=os.getenv("DBHOST"), dbname=os.getenv("DBNAME"), user=os.getenv("DBUSER"),
