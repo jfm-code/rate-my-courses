@@ -12,13 +12,8 @@ This project is a web-based application for reviewing and rating courses, simila
 |1234567                          | Computing I               |
 |7654321                          |Computing II               |
 
-<<<<<<< HEAD
-Reviews table:
-|---------------------------------|---------------------------------------------------------------|
-=======
 2. **Review table**:
 
->>>>>>> b3af9ddd4853762f60a87c40829c20d2f7496d88
 |course_id varchar(7) PRIMARY KEY | reviews JSONB                                                 |
 |---------------------------------|---------------------------------------------------------------|
 |1234567                          |{"review_id_1":{"rating":"7", "comment":"some comments here"}, |
