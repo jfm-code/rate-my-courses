@@ -46,8 +46,28 @@ def courses():
     
     for row in rows:
         courses_dict[row[0]] = row[1]
+    
+    cur.close()
+    conn.close() # end connection to the database
 
     return jsonify(courses_dict)
+
+
+@app.route("/<id>/review", methods=['GET']) 
+def review(id):
+    conn = psycopg2.connect(host=os.getenv("DBHOST"), dbname=os.getenv("DBNAME"), user=os.getenv("DBUSER"),
+                            password=os.getenv("DBPASSWORD"), port=os.getenv("DBPORT"))
+    cur = conn.cursor()
+    
+    # query the reviews of the course based on the course_id
+    select_query = '''SELECT reviews FROM reviews WHERE course_id = %s'''
+    cur.execute(select_query, (id,)) # this syntax will handle query injection
+    reviews = cur.fetchall()
+    conn.commit()
+
+    cur.close()
+    conn.close() # end connection to the database
+    return jsonify(reviews)
 
 if __name__ == "__main__":
     app.run(debug=True)
