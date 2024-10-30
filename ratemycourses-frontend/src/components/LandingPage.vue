@@ -2,53 +2,47 @@
   <div class="container">
     <h1>Rate My Courses</h1>
     <h2>Please choose an UML CS course to see review</h2>
-    <div class="course-list"> 
-      <div @click="goToReview" class="card">
+    <div class="course-list" v-if="courses.length > 0">
+      <div class="card" v-for="course in courses" :key="course.id" @click="goToReview(course.id)">
         <p>
-          <span>COMP.1020</span>
-          <span>Computing II</span>
+          <span>{{ course.name }}</span>
         </p>
       </div>
-      <div @click="goToReview" class="card">
-        <p>
-          <span>COMP.1020</span>
-          <span>Computing II</span>
-        </p>
-      </div>
-      <div @click="goToReview" class="card">
-        <p>
-          <span>COMP.2010</span>
-          <span>Computing III</span>
-        </p>
-      </div>
-      <div @click="goToReview" class="card">
-        <p>
-          <span>COMP.2030</span>
-          <span>Assembly Prog. Language</span>
-        </p>
-      </div>
-      <div @click="goToReview" class="card">
-        <p>
-          <span>COMP.2040</span>
-          <span>Computing IV</span>
-        </p>
-      </div>
-      
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'LandingPage',
   props: {
     msg: String
   },
+  data() { // Vue's reactivity system tracks changes to properties in the data
+    return {
+      courses: [] // when courses is updated, Vue re-renders the component
+    };
+  },
   methods: {
-    goToReview() {
-      // Route to /course when the form is submitted
+    goToReview() { // Route to /course when the form is submitted
       this.$router.push('/course');
+    },
+    async fetchCourseData() { // use async because we need to wait for API response
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/courses`);
+        this.courses = Object.entries(response.data).map(([id, name]) => ({
+          id,
+          name
+        }));
+      } catch(error) {
+        console.error('Error fetching courses:', error);
+      }
     }
+  },
+  mounted() { // only call the fetchCourseData function when finishing render the template
+    this.fetchCourseData();
   }
 }
 </script>

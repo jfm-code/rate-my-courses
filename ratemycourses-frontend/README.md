@@ -19,3 +19,6 @@ npm install vue-router
 - Install the extension called Vetur for better code visual on VSCode
 
 - It is recommended in Vue.js to use a Single File Component (SFC), which includes the ```<template>```, ```<script>```, and ```<style>``` all in the same component ```.vue``` file.
+
+## Note
+- Add VUE_APP_API_URL in the .env file

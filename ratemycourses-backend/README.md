@@ -28,10 +28,18 @@ pip install Flask
 pip install psycopg2
 pip install python-dotenv
 pip install uuid
+pip install flask-cors
 ```
 Download Pgadmin from https://www.pgadmin.org/ and setup PostgresQL database
+
+Create .env file for the DBHOST, DBNAME, DBUSER, DBPASSWORD, DBPORT
+
+## Notes
+```conn.commit()``` is used to save changes to the database when you’re performing data modification operations like INSERT, UPDATE, or DELETE
 
 Flask API route:
 - /courses: Handle the GET request from the frond end to GET the list of courses.
 - /courses/<id>: Handle the GET request from the frond end to GET the list of reviews for a course.
 - /courses/<id>/reviews: Handle POST request from the frond end to POST a review to a course.
+
+To run the backend: ```python server.py```

@@ -9,6 +9,10 @@ This project is a web-based application for reviewing and rating courses, simila
 
 ### 1. Frontend (Vue.js)
 
+**Main roles:**
+- Makes requests to backend endpoints using the URLs provided by the backend.
+- Processes the data received from the backend and renders it in the user interface.
+
 ```
 npm install -g @vue/cli
 vue create ratemycourses-frontend
@@ -18,6 +22,12 @@ When creating the vue project, choose [Vue 3] babel, eslint and Use Yarn
 
 
 ### 2. Backend (Flask)
+
+**Main roles:**
+- Creates and serves endpoints (/courses and /<id>/review) that handle HTTP requests.
+- Defines what data is returned by these endpoints (like course information and reviews).
+- Handles database interactions and any server-side logic, ensuring the data is available for the frontend.
+
 ```
 pip install Flask flask-cors psycopg2
 ```

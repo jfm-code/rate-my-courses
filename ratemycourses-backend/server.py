@@ -1,11 +1,13 @@
 from flask import Flask, request, jsonify
 import os
-import psycopg2
+import psycopg2 # a library to connect Python with a PostgreSQL database
+from flask_cors import CORS # to prevent CORS when fetching in frontend
 from dotenv import load_dotenv
 
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)  # enable CORS for all routes, allow all origins
 
 # api route for getting the list of courses
 # the courses function will be called when a GET request is sent to the /courses api route.
@@ -16,7 +18,6 @@ def courses():
     conn = psycopg2.connect(host=os.getenv("DBHOST"), dbname=os.getenv("DBNAME"), user=os.getenv("DBUSER"),
                             password=os.getenv("DBPASSWORD"), port=os.getenv("DBPORT"))
     cur = conn.cursor()
-    
 
     # create the course table if not exist
     create_course_table_query = """
@@ -45,10 +46,12 @@ def courses():
 
     #convert rows that is a list of tuple to dictionary type
     courses_dict={}
-    
+
     for row in rows:
-        courses_dict[row[0]] = row[1]
-    
+        course_id = row[0]
+        course_name = row[1]
+        courses_dict[course_id] = course_name
+
     cur.close()
     conn.close() # end connection to the database
 
@@ -62,12 +65,19 @@ def review(id):
     conn = psycopg2.connect(host=os.getenv("DBHOST"), dbname=os.getenv("DBNAME"), user=os.getenv("DBUSER"),
                             password=os.getenv("DBPASSWORD"), port=os.getenv("DBPORT"))
     cur = conn.cursor()
-    
+
     # query the reviews of the course based on the course_id
     select_query = '''SELECT reviews FROM reviews WHERE course_id = %s'''
     cur.execute(select_query, (id,)) # this syntax will handle query injection
-    reviews = cur.fetchall()
-    conn.commit()
+    # use fetchone() toget the json object only instead of getting the list with fetchall(), 
+    # simplify to easier frontend interaction
+    result = cur.fetchone()
+
+    # Check if result exists
+    if result:
+        reviews = result[0]  # this should be a dictionary already if stored as JSONB
+    else:
+        reviews = {}  # or handle as needed if there are no reviews
 
     cur.close()
     conn.close() # end connection to the database
