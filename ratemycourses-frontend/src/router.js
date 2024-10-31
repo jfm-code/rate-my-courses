@@ -10,7 +10,7 @@ const routes = [
     component: LandingPage,
   },
   {
-    path: '/course',
+    path: '/:name/:id/reviews', //allows it to route to a component with parameters that are passed to be used in the destination component. example: http://localhost:3000/comp II/1234/reviews
     name: 'Review',
     component: ReviewPage,
   }
