@@ -41,8 +41,10 @@ export default {
       }
     }
   },
-  mounted() { // only call the fetchCourseData function when finishing render the template
-    this.fetchCourseData();
+  beforeRouteEnter(to, from, next) { // fetch data when entering the route. Prevent delay on page load when using mounted()
+    next(vm => {
+      vm.fetchCourseData(); 
+    });
   }
 }
 </script>
