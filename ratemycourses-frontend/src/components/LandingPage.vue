@@ -3,7 +3,7 @@
     <h1>Rate My Courses</h1>
     <h2>Please choose an UML CS course to see review</h2>
     <div class="course-list" v-if="courses.length > 0">
-      <div class="card" v-for="course in courses" :key="course.id" @click="goToReview(course.id)">
+      <div class="card" v-for="course in courses" :key="course.id" @click="goToReview(course.id, course.name)">
         <p>
           <span>{{ course.name }}</span>
         </p>
@@ -26,8 +26,8 @@ export default {
     };
   },
   methods: {
-    goToReview() { // Route to /course when the form is submitted
-      this.$router.push('/course');
+    goToReview(id, name) { // Route to /:id/reviews when the form is submitted
+    this.$router.push({path: `${name}/${id}/reviews`, state: { name }});
     },
     async fetchCourseData() { // use async because we need to wait for API response
       try {
