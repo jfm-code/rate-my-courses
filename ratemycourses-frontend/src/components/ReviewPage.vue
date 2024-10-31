@@ -2,7 +2,7 @@
   <div>
     <div class="course-info">
       <div>
-        <h1><a href="https://www.uml.edu/catalog/courses/COMP/1020">COMP.1020 Computing II</a></h1>
+        <h1><a href="https://www.uml.edu/catalog/courses/COMP/1020">{{ course_name }}</a></h1>
         <div>
           <span>Data structures</span>
           <span>Algorithms</span>
@@ -16,33 +16,56 @@
       </div>
     </div>
     <div class="course-rating">
-      <div>
+      <div v-for="review in reviews" :key="review.id">
         <div>
           <span>RATING</span>
-          <span>8</span>
+          <span>{{ review.rating }}</span>
         </div>
         <div>
           <span>REVIEW</span>
-          <span>Computing II focuses on the implementation and applications of data structures, including arrays, linked lists, stacks, queues, trees, binary trees, binary search trees, heaps, graphs, and hash tables. Recursive approaches are used. Performance analysis is discussed. Attention is paid to programming style, documentation, and testing. This course includes extensive laboratory work. Effective Fall 2013, Co-req: Computing 2 Lab.</span>
+          <span>{{ review.comment }}</span>
         </div>
       </div>
-      <div>
-        <div>
-          <span>RATING</span>
-          <span>6</span>
-        </div>
-        <div>
-          <span>REVIEW</span>
-          <span>Computing II focuses on the implementation and applications of data structures, including arrays, linked lists, stacks, queues, trees, binary trees, binary search trees, heaps, graphs, and hash tables. Recursive approaches are used. Performance analysis is discussed. Attention is paid to programming style, documentation, and testing. This course includes extensive laboratory work. Effective Fall 2013, Co-req: Computing 2 Lab.</span>
-        </div>
-      </div>
+
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'ReviewPage',
+
+  data() { // Vue's reactivity system tracks changes to properties in the data
+    return {
+      course_name: '',
+      reviews: [], // when reviews is updated, Vue re-renders the component
+    };
+  },
+  methods: {
+
+  async fetchReviewsData(id) { // use async because we need to wait for API response
+      try {
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/${id}/review`);
+        this.reviews = Object.entries(response.data).map(([id, review]) => ({
+          "id": id,
+          "rating": review.rating,
+          "comment": review.comment,
+        }));
+      } catch(error) {
+        console.error('Error fetching reviews:', error);
+      }
+    },
+  },
+  beforeRouteEnter(to, from, next) { // fetch data when entering the route. Prevent delay on page load when using mounted()
+    console.log("finish")
+    next(vm => {
+      vm.fetchReviewsData(vm.$route.params.id); //can not use this here because of scope. Use vm instead.
+      vm.course_name = vm.$route.params.name;
+    });
+    
+  }
 }
 </script>
 
