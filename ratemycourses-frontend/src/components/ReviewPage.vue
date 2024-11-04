@@ -15,19 +15,28 @@
         <div class="total-score">/  10</div>
       </div>
     </div>
-    <div class="course-rating">
-      <div v-for="review in reviews" :key="review.id">
-        <div>
-          <span>RATING</span>
-          <span>{{ review.rating }}</span>
-        </div>
-        <div>
-          <span>REVIEW</span>
-          <span>{{ review.comment }}</span>
-        </div>
+    <div class="read-write-section"> 
+      <div class="course-rating">
+        <div v-for="review in reviews" :key="review.id">
+          <div>
+            <span>RATING</span>
+            <span>{{ review.rating }}</span>
+          </div>
+          <div>
+            <span>REVIEW</span>
+            <span>{{ review.comment }}</span>
+          </div>
       </div>
 
+      </div>
+      <div class="write-rating">
+        <p>Write your review for {{ course_name }}</p>
+        <textarea rows="12" cols="45" placeholder="Write your review here..."></textarea>
+        <input type="submit" value="Post">
+      </div>
     </div>
+    
+
   </div>
 </template>
 
@@ -128,9 +137,14 @@ span {
   margin-left:20px;
   padding-top:8px;
 }
+.read-write-section {
+  display: flex;
+  margin: 0px 140px 0px 140px;
+  gap: 4rem;
+}
 .course-rating {
-  width: 50%;
-  justify-self: center;
+  width: 60%;
+  justify-self: start;
 }
 .course-rating > div {
   display: grid;
@@ -140,7 +154,7 @@ span {
 .course-rating > div > div {
   display: flex;
   flex-direction: column;
-  margin-bottom: 40px;
+  margin-bottom: 35px;
 }
 .course-rating > div > div:nth-child(1) {
   background-color:cadetblue;
@@ -158,8 +172,8 @@ span {
 .course-rating > div > div:nth-child(1) > span:nth-child(2) {
   color: white;
   border-radius: 10px;
-  margin:20px 50px 20px 50px;
-  padding-left:25px;
+  margin:0px 50px 10px 50px;
+  padding-left:15px;
   font-size:70px;
 }
 .course-rating > div > div > span:nth-child(1) {
@@ -171,5 +185,42 @@ span {
   font-size: medium;
   padding: 25px;
   text-align: justify;
+}
+.write-rating {
+  border-style: solid;
+  width: 40%;
+  height: 100%;
+  border-radius: 10px;
+  border-color: cadetblue;
+}
+.write-rating > p {
+  font-weight: bold;
+  font-size: larger;
+  text-transform: capitalize;
+}
+textarea {
+  padding: 20px;
+  margin: 0px 15px 5px 15px;
+  border: 0px;
+  justify-self: center;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+  resize: none;
+  background-color:#d8eced;
+  outline: none;
+}
+.write-rating > input {
+  margin: 10px 0px 18px 0px;
+  padding: 8px 20px;
+  border: 2px solid cadetblue;
+  border-radius: 5px;
+  background-color: cadetblue;
+  color: white;
+  font-size: 16px;
+}
+.write-rating > input:hover {
+  border-color: darkcyan;
+  background-color: darkcyan;
 }
 </style>

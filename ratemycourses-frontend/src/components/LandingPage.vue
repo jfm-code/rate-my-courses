@@ -1,12 +1,27 @@
 <template>
-  <div class="container">
-    <h1>Rate My Courses</h1>
-    <h2>Please choose an UML CS course to see review</h2>
-    <div class="course-list" v-if="courses.length > 0">
-      <div class="card" v-for="course in courses" :key="course.id" @click="goToReview(course.id, course.name)">
-        <p>
-          <span>{{ course.name }}</span>
-        </p>
+  <div>
+    <div class="nav">
+      <a href="#">Login</a>
+      <a href="#">Sign Up</a>
+    </div>
+    <div class="container">
+      <h1>Rate My Courses</h1>
+      <h2>Please choose an UML CS course to see the rating</h2>
+      <div class="course-list" v-if="courses.length > 0">
+        <div class="card" v-for="course in courses" :key="course.id" @click="goToReview(course.id, course.name)">
+          <p>
+            <span>{{ course.name }}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="footer">
+      <div> 
+        <a href="#">Help</a>
+        <a href="#">Site Guidelines</a>
+      </div>
+      <div> 
+        <span>© 2024 Rate My Courses. All Rights Reserved</span>
       </div>
     </div>
   </div>
@@ -49,17 +64,78 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .container {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('../umasslowell.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.8)), url('../umasslowell.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
-  height: 100vh;
+  height: 43vh;
   background-attachment: fixed;
   padding: 100px 0px 100px 0px;
   color:white;
+}
+.nav {
+  height: 50px;
+  display: flex;
+  padding: 25px 50px 20px 0px;
+  gap: 25px;
+  justify-content: end;
+}
+.nav > a {
+  border-style: solid;
+  border-color: cadetblue;
+  background: cadetblue;
+  border-radius: 10px;
+  height:20px;
+  width: 65px;
+  padding: 8px 6px 5px 6px;
+  justify-items: center;
+  text-decoration: none;
+  color: white;
+}
+.nav > a:hover {
+  background-color: darkcyan;
+  border-color:darkcyan;
+}
+.footer {
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 30px;
+  gap: 20px;
+  justify-content: center;
+  color: darkcyan;
+}
+.footer > div:nth-child(1) {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+.footer > div > a {
+  text-decoration: none;
+  color: darkcyan;
+  position: relative;
+}
+.footer > div > a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  width: 0;
+  height: 2px;
+  background-color: currentColor; /* Use the text color for underline */
+  transition: width 0.3s ease, left 0.3s ease;
+}
+.footer > div > a:hover::after {
+  width: 100%;
+  left: 0;
+}
+h1 {
+  font-size: 60px;
+  background: linear-gradient(white, white, rgb(111, 182, 184), cadetblue);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .course-list {
   display: grid;
@@ -68,11 +144,11 @@ export default {
 }
 .card {
   background-color: white;
-  padding:2px 10px 2px 10px; /* top, right, bottom, left */
+  padding:0px 10px 0px 10px;
   margin-left: 20px;
   margin-top: 30px;
   margin: 30px 0px 30px 20px;
-  color: darkslategray;
+  color: darkcyan;
   user-select: none;
   border-radius: 10px;
   border-style: solid;
