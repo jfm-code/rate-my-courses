@@ -25,9 +25,12 @@
           <div>
             <span>REVIEW</span>
             <span>{{ review.comment }}</span>
-          </div>
-      </div>
+            <button class="delete-button">
+              <i class="fas fa-trash"></i>
+            </button>
 
+          </div>
+        </div>
       </div>
       <div class="write-rating">
         <p>Write your review for {{ course_name }}</p>
@@ -223,4 +226,22 @@ textarea {
   border-color: darkcyan;
   background-color: darkcyan;
 }
+.delete-button {
+  background-color:white;
+  color: cadetblue;
+  padding: 6px 4px;
+  margin-left:470px;
+  margin-top: 20px;
+  font-size: 16px;
+  border:none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+}
+.delete-button:hover {
+  background-color: #d8eced;
+  color:darkcyan;
+}
+
 </style>
