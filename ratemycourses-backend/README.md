@@ -7,14 +7,14 @@ This project is a web-based application for reviewing and rating courses, simila
 ## Database structure:
 1. **Course table**:
 
-|course_id varchar(7) PRIMARY KEY | course_title varchar(200) |
+|course_id SERIAL PRIMARY KEY     | course_title varchar(200) |
 |---------------------------------|---------------------------|
 |1234567                          | Computing I               |
 |7654321                          |Computing II               |
 
 2. **Review table**:
 
-|course_id varchar(7) PRIMARY KEY | reviews JSONB                                                 |
+|course_id SERIAL PRIMARY KEY     | reviews JSONB                                                 |
 |---------------------------------|---------------------------------------------------------------|
 |1234567                          |{"review_id_1":{"rating":"7", "comment":"some comments here"}, |
 |                                 |  "review_id_2":{"rating":"8", "comment":"some comments here"}}|
