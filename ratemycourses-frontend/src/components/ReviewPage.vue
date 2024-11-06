@@ -33,8 +33,15 @@
         </div>
       </div>
       <div class="write-rating">
-        <p>Write your review for {{ course_name }}</p>
-        <textarea rows="12" cols="45" placeholder="Write your review here..."></textarea>
+        <p style="margin-bottom: 0px;">Write your review for {{ course_name }}</p>
+        <div class="rate-container">
+          <span @click="rate(1)" class="rate-box" id="box1" style="border-radius: 15px 3px 3px 15px; width: 15px;">1</span>
+          <span @click="rate(2)" class="rate-box" id="box2">2</span>
+          <span @click="rate(3)" class="rate-box" id="box3">3</span>
+          <span @click="rate(4)" class="rate-box" id="box4">4</span>
+          <span @click="rate(5)" class="rate-box" id="box5" style="border-radius: 3px 15px 15px 3px; width: 15px;">5</span>
+        </div>
+        <textarea rows="9" cols="45" placeholder="Write your review here..."></textarea>
         <input type="submit" value="Post">
       </div>
     </div>
@@ -56,8 +63,7 @@ export default {
     };
   },
   methods: {
-
-  async fetchReviewsData(id) { // use async because we need to wait for API response
+    async fetchReviewsData(id) { // use async because we need to wait for API response
       try {
         const response = await axios.get(`${process.env.VUE_APP_API_URL}/${id}/review`);
         this.reviews = Object.entries(response.data).map(([id, review]) => ({
@@ -69,6 +75,14 @@ export default {
         console.error('Error fetching reviews:', error);
       }
     },
+    rate(rating) {
+      document.querySelectorAll('.rate-box').forEach(box => {
+          box.classList.remove('selected');
+      });
+      for (let i = 1; i <= rating; i++) {
+          document.getElementById('box' + i).classList.add('selected');
+      }
+    }
   },
   beforeRouteEnter(to, from, next) { // fetch data when entering the route. Prevent delay on page load when using mounted()
     console.log("finish")
@@ -201,10 +215,34 @@ span {
   font-size: larger;
   text-transform: capitalize;
 }
+.rate-container {
+  margin: 12px 0px 12px 0px;
+  padding: 8px 0px 8px 0px;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+.rate-box {
+  height: inherit;
+  padding: 7px 12px;
+  background-color: #d8eced;
+  border-radius: 3px;
+  margin:0px;
+  cursor: pointer;
+}
+.rate-box:hover {
+  background-color:rgb(123, 194, 196);
+  color:white;
+}
+.rate-box.selected {
+  background-color:darkcyan;
+  color:white;
+}
 textarea {
   padding: 20px;
   margin: 0px 15px 5px 15px;
   border: 0px;
+  border-radius: 3px;
   justify-self: center;
   font-family: Arial, sans-serif;
   font-size: 16px;
