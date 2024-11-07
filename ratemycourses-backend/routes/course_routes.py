@@ -35,3 +35,56 @@ def get_courses():
     conn.close() # end connection to the database
 
     return jsonify(courses_dict)
+
+@course_bp.route("/<course_id>/delete", methods=['DELETE'])
+def delete_courses(course_id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    delete_query = '''
+        DELETE FROM courses
+        WHERE course_id=%s
+    '''
+    cur.execute(delete_query, (course_id,))
+    conn.commit()
+
+    if cur.rowcount == 0:
+        cur.close()
+        conn.close()
+        return jsonify({"message": "Failed. course_id does not exist."}), 500
+    cur.close()
+    conn.close() # end connection to the database
+
+    return jsonify({"message": "The course was deleted successfully"}), 200
+
+@course_bp.route("/<course_name>/create/", methods=['POST'])
+def create_courses(course_name):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    check_query = ''' 
+    SELECT 1 FROM courses WHERE course_title = %s;
+    '''
+
+    create_query = '''
+    INSERT INTO courses (course_title) 
+    VALUES (%s);
+    '''
+    cur.execute(check_query, (course_name,))
+    conn.commit()
+    result = cur.fetchone()
+
+    if result:
+        cur.close()
+        conn.close()
+        return jsonify({"message": "This course already exist in the database"}), 409
+    
+    cur.execute(create_query, (course_name,))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return jsonify({"message": "The course was deleted successfully"}), 200
+
+    
+
