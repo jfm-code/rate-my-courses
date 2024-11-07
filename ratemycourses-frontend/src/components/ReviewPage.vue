@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NavigationBar></NavigationBar>
     <div class="course-info">
       <div>
         <h1><a href="https://www.uml.edu/catalog/courses/COMP/1020">{{ course_name }}</a></h1>
@@ -45,17 +46,20 @@
         <input type="submit" value="Post">
       </div>
     </div>
-    
-
+    <FooterSection></FooterSection>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-
+import NavigationBar from './NavigationBar.vue';
+import FooterSection from './FooterSection.vue';
 export default {
   name: 'ReviewPage',
-
+  components: {
+    NavigationBar,
+    FooterSection
+  },
   data() { // Vue's reactivity system tracks changes to properties in the data
     return {
       course_name: '',
@@ -63,9 +67,9 @@ export default {
     };
   },
   methods: {
-    async fetchReviewsData(id) { // use async because we need to wait for API response
+    async getReviewsData(id) { // use async because we need to wait for API response
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_URL}/${id}/review`);
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/reviews/${id}`);
         this.reviews = Object.entries(response.data).map(([id, review]) => ({
           "id": id,
           "rating": review.rating,
@@ -87,7 +91,7 @@ export default {
   beforeRouteEnter(to, from, next) { // fetch data when entering the route. Prevent delay on page load when using mounted()
     console.log("finish")
     next(vm => {
-      vm.fetchReviewsData(vm.$route.params.id); //can not use this here because of scope. Use vm instead.
+      vm.getReviewsData(vm.$route.params.id); //can not use this here because of scope. Use vm instead.
       vm.course_name = vm.$route.params.name;
     });
     
@@ -122,7 +126,7 @@ h1 a:hover::after {
 .course-info {
   display: grid;
   grid-template-columns: 60% 40%;
-  margin:50px;
+  margin:0px 50px 50px 50px;
 }
 .course-info > div:nth-child(1) {
   padding: 50px;
