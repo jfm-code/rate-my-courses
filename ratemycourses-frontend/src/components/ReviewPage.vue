@@ -12,8 +12,8 @@
         </div>
       </div>
       <div>
-        <div class="avg-score">7.8</div>
-        <div class="total-score">/  10</div>
+        <div class="avg-score">{{ calculateAverageRating() }}</div>
+        <div class="total-score">/ 5</div>
       </div>
     </div>
     <div class="read-write-section"> 
@@ -42,7 +42,7 @@
           <span @click="rate(4)" class="rate-box" id="box4">4</span>
           <span @click="rate(5)" class="rate-box" id="box5" style="border-radius: 3px 15px 15px 3px; width: 15px;">5</span>
         </div>
-        <textarea rows="9" cols="45" placeholder="Write your review here..."></textarea>
+        <textarea rows="9" cols="45" placeholder="What did you like / dislike about this course?"></textarea>
         <input type="submit" value="Post">
       </div>
     </div>
@@ -77,6 +77,18 @@ export default {
         }));
       } catch(error) {
         console.error('Error fetching reviews:', error);
+      }
+    },
+    calculateAverageRating() {
+      if(this.reviews.length == 0) {
+        return 0;
+      }
+      else {
+        let sum = 0;
+        this.reviews.forEach(review => {
+          sum += review.rating;
+        });
+        return (sum / this.reviews.length).toFixed(1); // rounded to 1 decimal place;
       }
     },
     rate(rating) {
@@ -126,11 +138,11 @@ h1 a:hover::after {
 .course-info {
   display: grid;
   grid-template-columns: 60% 40%;
-  margin:0px 50px 50px 50px;
+  margin:0px 50px 0px 50px;
 }
 .course-info > div:nth-child(1) {
-  padding: 50px;
-  margin-left:20px
+  padding: 20px;
+  margin-left:20px;
 }
 span {
   margin: 0px 15px 0px 15px;
@@ -138,14 +150,14 @@ span {
 }
 .course-info > div:nth-child(2) {
   display: grid;
-  grid-template-columns: 60% 40%;
+  grid-template-columns: 65% 35%;
   width: 40%;
   justify-self: center;
-  padding: 35px 20px 0px 0px;
-  margin: 50px 0px 50px 0px;
+  padding: 40px 20px 0px 0px;
+  margin: 50px 80px 50px 0px;
   height: 120px;
   color:white;
-  background-color: cadetblue;
+  background-color: #5f9ea0;
   border-radius: 10px;
 }
 .avg-score {
@@ -157,10 +169,11 @@ span {
   justify-self:left;
   margin-left:20px;
   padding-top:8px;
+
 }
 .read-write-section {
   display: flex;
-  margin: 0px 140px 0px 140px;
+  margin: 20px 140px 5px 140px;
   gap: 4rem;
 }
 .course-rating {
@@ -263,6 +276,7 @@ textarea {
   background-color: cadetblue;
   color: white;
   font-size: 16px;
+  cursor: pointer;
 }
 .write-rating > input:hover {
   border-color: darkcyan;
