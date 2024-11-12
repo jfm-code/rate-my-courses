@@ -1,5 +1,6 @@
 <template>
   <div>
+    <NavigationBar></NavigationBar>
     <div class="course-info">
       <div>
         <h1><a href="https://www.uml.edu/catalog/courses/COMP/1020">{{ course_name }}</a></h1>
@@ -11,8 +12,8 @@
         </div>
       </div>
       <div>
-        <div class="avg-score">7.8</div>
-        <div class="total-score">/  10</div>
+        <div class="avg-score">{{ calculateAverageRating() }}</div>
+        <div class="total-score">/ 5</div>
       </div>
     </div>
     <div class="read-write-section"> 
@@ -41,21 +42,24 @@
           <span @click="rate(4)" class="rate-box" id="box4">4</span>
           <span @click="rate(5)" class="rate-box" id="box5" style="border-radius: 3px 15px 15px 3px; width: 15px;">5</span>
         </div>
-        <textarea rows="9" cols="45" placeholder="Write your review here..."></textarea>
+        <textarea rows="9" cols="45" placeholder="What did you like / dislike about this course?"></textarea>
         <input type="submit" value="Post">
       </div>
     </div>
-    
-
+    <FooterSection></FooterSection>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-
+import NavigationBar from './NavigationBar.vue';
+import FooterSection from './FooterSection.vue';
 export default {
   name: 'ReviewPage',
-
+  components: {
+    NavigationBar,
+    FooterSection
+  },
   data() { // Vue's reactivity system tracks changes to properties in the data
     return {
       course_name: '',
@@ -63,9 +67,9 @@ export default {
     };
   },
   methods: {
-    async fetchReviewsData(id) { // use async because we need to wait for API response
+    async getReviewsData(id) { // use async because we need to wait for API response
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_URL}/${id}/review`);
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/reviews/${id}`);
         this.reviews = Object.entries(response.data).map(([id, review]) => ({
           "id": id,
           "rating": review.rating,
@@ -73,6 +77,18 @@ export default {
         }));
       } catch(error) {
         console.error('Error fetching reviews:', error);
+      }
+    },
+    calculateAverageRating() {
+      if(this.reviews.length == 0) {
+        return 0;
+      }
+      else {
+        let sum = 0;
+        this.reviews.forEach(review => {
+          sum += review.rating;
+        });
+        return (sum / this.reviews.length).toFixed(1); // rounded to 1 decimal place;
       }
     },
     rate(rating) {
@@ -87,7 +103,7 @@ export default {
   beforeRouteEnter(to, from, next) { // fetch data when entering the route. Prevent delay on page load when using mounted()
     console.log("finish")
     next(vm => {
-      vm.fetchReviewsData(vm.$route.params.id); //can not use this here because of scope. Use vm instead.
+      vm.getReviewsData(vm.$route.params.id); //can not use this here because of scope. Use vm instead.
       vm.course_name = vm.$route.params.name;
     });
     
@@ -122,11 +138,11 @@ h1 a:hover::after {
 .course-info {
   display: grid;
   grid-template-columns: 60% 40%;
-  margin:50px;
+  margin:0px 50px 0px 50px;
 }
 .course-info > div:nth-child(1) {
-  padding: 50px;
-  margin-left:20px
+  padding: 20px;
+  margin-left:20px;
 }
 span {
   margin: 0px 15px 0px 15px;
@@ -134,14 +150,14 @@ span {
 }
 .course-info > div:nth-child(2) {
   display: grid;
-  grid-template-columns: 60% 40%;
+  grid-template-columns: 65% 35%;
   width: 40%;
   justify-self: center;
-  padding: 35px 20px 0px 0px;
-  margin: 50px 0px 50px 0px;
+  padding: 40px 20px 0px 0px;
+  margin: 50px 80px 50px 0px;
   height: 120px;
   color:white;
-  background-color: cadetblue;
+  background-color: #5f9ea0;
   border-radius: 10px;
 }
 .avg-score {
@@ -153,10 +169,11 @@ span {
   justify-self:left;
   margin-left:20px;
   padding-top:8px;
+
 }
 .read-write-section {
   display: flex;
-  margin: 0px 140px 0px 140px;
+  margin: 20px 140px 5px 140px;
   gap: 4rem;
 }
 .course-rating {
@@ -259,6 +276,7 @@ textarea {
   background-color: cadetblue;
   color: white;
   font-size: 16px;
+  cursor: pointer;
 }
 .write-rating > input:hover {
   border-color: darkcyan;
