@@ -55,9 +55,9 @@ def delete_courses(course_id):
     cur.close()
     conn.close() # end connection to the database
 
-    return jsonify({"message": "The course was deleted successfully"}), 200
+    return jsonify({"message": "The course was delete successfully"}), 200
 
-@course_bp.route("/<course_name>/create/", methods=['POST'])
+@course_bp.route("/<course_name>/create", methods=['POST'])
 def create_courses(course_name):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -84,7 +84,5 @@ def create_courses(course_name):
     cur.close()
     conn.close()
 
-    return jsonify({"message": "The course was deleted successfully"}), 200
-
-    
+    return jsonify({"message": "The course was created successfully"}), 200
 
