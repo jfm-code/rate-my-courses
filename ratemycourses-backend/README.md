@@ -1,26 +1,22 @@
 # RateMyCourses Website (Backend)
 
-## Overview
-
-This project is a web-based application for reviewing and rating courses, similar to RateMyProfessors. It uses **Vue.js** for the frontend, **Flask** for the backend, and **PostgreSQL** for the database. The application is hosted on **AWS** with a CI/CD pipeline for automated build and deployment, using AWS services like **EC2**, **S3**, **RDS**, **CloudFormation**, and **CodePipeline**.
+We use Flask for backend and PostgreSQL for database
 
 ## Database structure:
 1. **Course table**:
 
 |course_id SERIAL PRIMARY KEY     | course_title varchar(200) |
 |---------------------------------|---------------------------|
-|1234567                          | Computing I               |
-|7654321                          |Computing II               |
+|              123                | Computing I               |
+|              124                | Computing II              |
 
 2. **Review table**:
 
-|course_id SERIAL PRIMARY KEY     | reviews JSONB                                                 |
-|---------------------------------|---------------------------------------------------------------|
-|1234567                          |{"review_id_1":{"rating":"7", "comment":"some comments here"}, |
-|                                 |  "review_id_2":{"rating":"8", "comment":"some comments here"}}|
-|7654321                          |{"review_id_1":{"rating":"6", "comment":"some comments here"}, |
-|                                 |  "review_id_2":{"rating":"9", "comment":"some comments here"}}|
-
+|review_id SERIAL PRIMARY KEY     |  course_id  |  rating  |  comment                             |
+|---------------------------------|-------------|----------|--------------------------------------|
+|              1                  |     123     |    4     |   The course is pretty good          |
+|              2                  |     124     |    2     |   The course is pretty good          |
+|              3                  |     123     |    1     |   The course is pretty good          |
 
 ## Project Setup for Backend (Flask)
 ```
@@ -32,14 +28,24 @@ pip install flask-cors
 ```
 Download Pgadmin from https://www.pgadmin.org/ and setup PostgresQL database
 
-Create .env file for the DBHOST, DBNAME, DBUSER, DBPASSWORD, DBPORT
+Create .env file for the DBHOST, DBNAME, DBUSER, DBPASSWORD, DBPORT and put in the information to connect the backend to the PostgreSQL on the computer
 
 ## Notes
 ```conn.commit()``` is used to save changes to the database when you’re performing data modification operations like INSERT, UPDATE, or DELETE
 
-Flask API route:
-- /courses: Handle the GET request from the frond end to GET the list of courses.
-- /courses/<id>: Handle the GET request from the frond end to GET the list of reviews for a course.
-- /courses/<id>/reviews: Handle POST request from the frond end to POST a review to a course.
+**Files:**
+- ```requirements.txt```: file that contains required libraries/dependencies to run the backend. Install by ```pip install -r requirements.txt```
+- ```.env```: file that stores the information to connect to local database (example below)
+    ```
+    DBHOST=nameofhost
+    DBNAME=databasename
+    DBUSER=username
+    DBPASSWORD=databasepassword
+    DBPORT=databaseport
+    FEDOMAIN=frontendURLtoenableCORS
+    ```
+- ```server.py```: file that initialize the flask app, get the api blueprints from routes folder. Run the backend with this file. To run the backend: ```python server.py```
+- ```config.py``` and ```database.py```: they are used to config and connect to database
+- ```routes/```: this folder stores the create of APIs. For example ```course_routes.py``` stores the GET, POST, DELETE,... methods related to courses (create a new course, get course information, delete a course,...)
 
-To run the backend: ```python server.py```
+
