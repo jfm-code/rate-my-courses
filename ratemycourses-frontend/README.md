@@ -9,6 +9,7 @@ npm install -g @vue/cli
 vue create ratemycourses-frontend
 npm install axios
 npm install vue-router
+npm install -g serve (to check after yarn build, before put in AWS)
 ```
 - When creating the vue project, choose [Vue 3] babel, eslint and Use Yarn
 
