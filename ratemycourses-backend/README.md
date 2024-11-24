@@ -44,7 +44,7 @@ Create .env file for the DBHOST, DBNAME, DBUSER, DBPASSWORD, DBPORT and put in t
     DBPORT=databaseport
     FEDOMAIN=frontendURLtoenableCORS
     ```
-- ```server.py```: file that initialize the flask app, get the api blueprints from routes folder. Run the backend with this file. To run the backend: ```python server.py```
+- ```app.py```: before this file is named ```server.py```, but then changed to ```app.py``` so that I can run by doing ```flask run``` instead of ```python server.py```. This file initializes the flask app, get the api blueprints from routes folder.
 - ```config.py``` and ```database.py```: they are used to config and connect to database
 - ```routes/```: this folder stores the create of APIs. For example ```course_routes.py``` stores the GET, POST, DELETE,... methods related to courses (create a new course, get course information, delete a course,...)
 
