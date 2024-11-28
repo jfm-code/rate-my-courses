@@ -28,13 +28,18 @@ class AmplifyFrontendStack(Stack):
                     "phases": {
                         "preBuild": {
                             "commands": [
-                                "cd ratemycourses-frontend",  # Navigate to subdirectory
+                                "echo 'Starting preBuild phase...'",  # Debug log
+                                "ls -la",  # List files in the root directory
+                                "cd ratemycourses-frontend",  # Navigate to the frontend folder
+                                "ls -la",  # List files in the frontend folder
                                 "yarn install"  # Install dependencies
                             ]
                         },
                         "build": {
                             "commands": [
-                                "yarn build"  # Build the frontend
+                                "echo 'Starting build phase...'",  # Debug log
+                                "yarn build",  # Build the frontend
+                                "ls -la build"  # Verify the build folder exists
                             ]
                         }
                     },

@@ -57,7 +57,7 @@
      ]
     },
     "BranchName": "dev-mi",
-    "BuildSpec": "version: \"1.0\"\nfrontend:\n  phases:\n    preBuild:\n      commands:\n        - cd ratemycourses-frontend\n        - yarn install\n    build:\n      commands:\n        - yarn build\n  artifacts:\n    baseDirectory: ratemycourses-frontend/dist\n    files:\n      - \"**/*\"\n  cache:\n    paths:\n      - node_modules/**/*\n",
+    "BuildSpec": "version: \"1.0\"\nfrontend:\n  phases:\n    preBuild:\n      commands:\n        - echo 'Starting preBuild phase...'\n        - ls -la\n        - cd ratemycourses-frontend\n        - ls -la\n        - yarn install\n    build:\n      commands:\n        - echo 'Starting build phase...'\n        - yarn build\n        - ls -la build\n  artifacts:\n    baseDirectory: ratemycourses-frontend/dist\n    files:\n      - \"**/*\"\n  cache:\n    paths:\n      - node_modules/**/*\n",
     "EnableAutoBuild": true,
     "EnablePullRequestPreview": true
    },
