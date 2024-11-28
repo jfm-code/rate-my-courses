@@ -57,7 +57,6 @@
      ]
     },
     "BranchName": "dev-mi",
-    "BuildSpec": "version: 1\nfrontend:\n  phases:\n    preBuild:\n      commands:\n        - cd ratemycourses-frontend\n        - yarn install\n    build:\n      commands:\n        - yarn build\n  artifacts:\n    baseDirectory: ratemycourses-frontend/dist\n    files:\n      - \"**/*\"\n  cache:\n    paths:\n      - ratemycourses-frontend/node_modules/**/*\n",
     "EnableAutoBuild": true,
     "EnablePullRequestPreview": true
    },

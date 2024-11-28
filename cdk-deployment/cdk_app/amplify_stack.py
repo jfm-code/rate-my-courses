@@ -19,39 +19,7 @@ class AmplifyFrontendStack(Stack):
 
         # Add environment variables and branch
         amplify_app.add_environment("VUE_APP_API_URL", "http://127.0.0.1:5000")
-        amplify_app.add_branch(
-            "dev-mi",
-            # have to use prebuild to cd to the frontend folder, cause we can use repo name only for the above field
-            build_spec=BuildSpec.from_object_to_yaml({
-                "version": 1,
-                "frontend": {
-                    "phases": {
-                        "preBuild": {
-                            "commands": [
-                                "cd ratemycourses-frontend",  # Navigate to the frontend folder
-                                "yarn install"  # Install dependencies
-                            ]
-                        },
-                        "build": {
-                            "commands": [
-                                "yarn build",  # Build the frontend
-                            ]
-                        }
-                    },
-                    "artifacts": {
-                        "baseDirectory": "ratemycourses-frontend/dist",  # Specify output folder
-                        "files": [
-                            "**/*"
-                        ]
-                    },
-                    "cache": {
-                        "paths": [
-                            "ratemycourses-frontend/node_modules/**/*"
-                        ]
-                    }
-                }
-            })
-        )
+        amplify_app.add_branch("dev-mi")
 
 # Initialize the CDK application
 app = CdkApp()
