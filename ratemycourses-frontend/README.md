@@ -27,23 +27,23 @@ npm install -g serve (to check after yarn build, before put in AWS)
 - Step 2: Verify the frontend to see if it works as expected after building with ```serve -s dist```. To use this command we need to install with ```yarn global add serve```
 - Step 3: Push the ```dist``` folder that we just created in the git branch that we want to deploy with.
 - Step 4: Go to Amplify, create a project, connect with Github repo and use this file (```amplify.yml```) to config:
-    ```
-    version: 1
-    frontend:
-    phases:
-        preBuild:
-        commands:
-            - cd ratemycourses-frontend
-            - yarn install
-        build:
-        commands:
-            - yarn build
-    artifacts:
+```
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd ratemycourses-frontend
+        - yarn install
+    build:
+      commands:
+        - yarn build
+  artifacts:
         baseDirectory: ratemycourses-frontend/dist
         files:
         - '**/*'
-    cache:
-        paths:
-        - ratemycourses-frontend/node_modules/**/*
-    ```
+  cache:
+      paths:
+      - ratemycourses-frontend/node_modules/**/*
+```
 - Step 5: Add the environment variable of the frontend to Amplify. Redeploy again if needed to see the changes.

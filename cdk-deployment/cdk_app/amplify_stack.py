@@ -23,21 +23,18 @@ class AmplifyFrontendStack(Stack):
             "dev-mi",
             # have to use prebuild to cd to the frontend folder, cause we can use repo name only for the above field
             build_spec=BuildSpec.from_object_to_yaml({
-                "version": "1",
+                "version": 1,
                 "frontend": {
                     "phases": {
                         "preBuild": {
                             "commands": [
-                                "ls -la",  # List files in the root directory
                                 "cd ratemycourses-frontend",  # Navigate to the frontend folder
-                                "ls -la",  # List files in the frontend folder
                                 "yarn install"  # Install dependencies
                             ]
                         },
                         "build": {
                             "commands": [
                                 "yarn build",  # Build the frontend
-                                "ls -la dist"  # Verify the dist folder exists
                             ]
                         }
                     },
