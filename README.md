@@ -49,3 +49,6 @@ First of all, you should use Linux Ubuntu instead of Bash, it's easier to use AW
 - Step 7: The only manual step. Migrate AWS Amplify to Github App via AWS Console (connect your Github account to Amplify to authorize the access to the repo). Right now it does not support migrating to the GitHub App integration via the CLI.
 
 - Step 8: To delete the Amplify stack, do ```cdk destroy```
+
+## Notes
+- When the Amplify stack is created and we completed migrating to Github App, no deployment will happen, simply because we haven't made any change to the branch yet.

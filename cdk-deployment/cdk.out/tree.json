@@ -104,6 +104,7 @@
                           ]
                         },
                         "branchName": "dev-mi",
+                        "buildSpec": "version: \"1.0\"\nfrontend:\n  phases:\n    preBuild:\n      commands:\n        - cd ratemycourses-frontend\n        - npm install\n    build:\n      commands:\n        - npm run build\n  artifacts:\n    baseDirectory: ratemycourses-frontend/build\n    files:\n      - \"**/*\"\n  cache:\n    paths:\n      - node_modules/**/*\n",
                         "enableAutoBuild": true,
                         "enablePullRequestPreview": true
                       }

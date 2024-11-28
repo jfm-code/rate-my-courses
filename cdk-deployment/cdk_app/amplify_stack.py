@@ -1,5 +1,6 @@
 from aws_cdk import App as CdkApp, SecretValue, Stack
 from constructs import Construct
+from aws_cdk.aws_codebuild import BuildSpec
 from aws_cdk.aws_amplify_alpha import App as AmplifyApp, GitHubSourceCodeProvider
 
 class AmplifyFrontendStack(Stack):
@@ -18,7 +19,39 @@ class AmplifyFrontendStack(Stack):
 
         # Add environment variables and branch
         amplify_app.add_environment("VUE_APP_API_URL", "http://127.0.0.1:5000")
-        amplify_app.add_branch("dev-mi")
+        amplify_app.add_branch(
+            "dev-mi",
+            # have to use prebuild to cd to the frontend folder, cause we can use repo name only for the above field
+            build_spec=BuildSpec.from_object_to_yaml({
+                "version": "1.0",
+                "frontend": {
+                    "phases": {
+                        "preBuild": {
+                            "commands": [
+                                "cd ratemycourses-frontend",  # Navigate to subdirectory
+                                "npm install"  # Install dependencies
+                            ]
+                        },
+                        "build": {
+                            "commands": [
+                                "npm run build"  # Build the frontend
+                            ]
+                        }
+                    },
+                    "artifacts": {
+                        "baseDirectory": "ratemycourses-frontend/build",  # Specify output folder
+                        "files": [
+                            "**/*"
+                        ]
+                    },
+                    "cache": {
+                        "paths": [
+                            "node_modules/**/*"
+                        ]
+                    }
+                }
+            })
+        )
 
 # Initialize the CDK application
 app = CdkApp()
