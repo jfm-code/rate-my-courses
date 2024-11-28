@@ -29,17 +29,17 @@ class AmplifyFrontendStack(Stack):
                         "preBuild": {
                             "commands": [
                                 "cd ratemycourses-frontend",  # Navigate to subdirectory
-                                "npm install"  # Install dependencies
+                                "yarn install"  # Install dependencies
                             ]
                         },
                         "build": {
                             "commands": [
-                                "npm run build"  # Build the frontend
+                                "yarn build"  # Build the frontend
                             ]
                         }
                     },
                     "artifacts": {
-                        "baseDirectory": "ratemycourses-frontend/build",  # Specify output folder
+                        "baseDirectory": "ratemycourses-frontend/dist",  # Specify output folder
                         "files": [
                             "**/*"
                         ]
