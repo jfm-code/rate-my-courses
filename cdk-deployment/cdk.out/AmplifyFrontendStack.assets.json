@@ -1,7 +1,7 @@
 {
   "version": "38.0.1",
   "files": {
-    "2753db7a2dfc6e4c0c55cd3568d914cc029285aa09ce51be7f28753a9d17c6b8": {
+    "8166a5fe723e5942987e13ca28e0fff2a46e252e1cc6dca640b4d45fc7c03759": {
       "source": {
         "path": "AmplifyFrontendStack.template.json",
         "packaging": "file"
@@ -9,7 +9,7 @@
       "destinations": {
         "current_account-current_region": {
           "bucketName": "cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}",
-          "objectKey": "2753db7a2dfc6e4c0c55cd3568d914cc029285aa09ce51be7f28753a9d17c6b8.json",
+          "objectKey": "8166a5fe723e5942987e13ca28e0fff2a46e252e1cc6dca640b4d45fc7c03759.json",
           "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-file-publishing-role-${AWS::AccountId}-${AWS::Region}"
         }
       }
