@@ -1,0 +1,89 @@
+{
+  "version": "38.0.1",
+  "artifacts": {
+    "AmplifyFrontendStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "AmplifyFrontendStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "AmplifyFrontendStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://unknown-account/unknown-region",
+      "properties": {
+        "templateFile": "AmplifyFrontendStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-deploy-role-${AWS::AccountId}-${AWS::Region}",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-cfn-exec-role-${AWS::AccountId}-${AWS::Region}",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}/b1bf44521ec5bfeba0e219c71e1a69de6750f7f2d6330e772a191dd8affd9103.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "AmplifyFrontendStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::${AWS::AccountId}:role/cdk-hnb659fds-lookup-role-${AWS::AccountId}-${AWS::Region}",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "AmplifyFrontendStack.assets"
+      ],
+      "metadata": {
+        "/AmplifyFrontendStack/RateMyCourses/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RateMyCoursesRoleD9E41396"
+          }
+        ],
+        "/AmplifyFrontendStack/RateMyCourses/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RateMyCourses22B9EBA5"
+          }
+        ],
+        "/AmplifyFrontendStack/RateMyCourses/dev-mi/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "RateMyCoursesdevmi95AD208C"
+          }
+        ],
+        "/AmplifyFrontendStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/AmplifyFrontendStack/CDKMetadata/Condition": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadataAvailable"
+          }
+        ],
+        "/AmplifyFrontendStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/AmplifyFrontendStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "AmplifyFrontendStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
