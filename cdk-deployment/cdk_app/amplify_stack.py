@@ -1,6 +1,5 @@
 from aws_cdk import App as CdkApp, SecretValue, Stack
 from constructs import Construct
-from aws_cdk.aws_codebuild import BuildSpec
 from aws_cdk.aws_amplify_alpha import App as AmplifyApp, GitHubSourceCodeProvider
 
 class AmplifyFrontendStack(Stack):
