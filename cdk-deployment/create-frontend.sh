@@ -8,12 +8,12 @@ AMPLIFY_APP_NAME="RateMyCourses"
 GITHUB_BRANCH_NAME="dev-mi"
 
 echo "Installing AWS CDK CLI..."
-sudo npm install -g aws-cdk
+sudo npm install -g aws-cdk > /dev/null 2>&1
 cdk --version
 
 echo "Installing Python dependencies..."
-python3 -m pip install -r requirements.txt
-pip install aws-cdk.aws-amplify-alpha
+pip install -r requirements.txt > /dev/null 2>&1
+pip install aws-cdk.aws-amplify-alpha > /dev/null 2>&1
 
 echo "Creating GitHub token in AWS Secrets Manager if there isn't one already..."
 SECRET_EXISTS=$(aws secretsmanager describe-secret --secret-id "$GITHUB_TOKEN_NAME" --query "Name" --output text 2>/dev/null || echo "NOT_FOUND")
