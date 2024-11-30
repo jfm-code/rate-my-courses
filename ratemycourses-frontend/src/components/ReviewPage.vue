@@ -42,8 +42,8 @@
           <span @click="rate(4)" class="rate-box" id="box4">4</span>
           <span @click="rate(5)" class="rate-box" id="box5" style="border-radius: 3px 15px 15px 3px; width: 15px;">5</span>
         </div>
-        <textarea rows="9" cols="45" placeholder="What did you like / dislike about this course?"></textarea>
-        <input type="submit" value="Post">
+        <textarea @keyup.enter="postReview" v-model="newReview.comment" rows="9" cols="45" placeholder="What did you like / dislike about this course?"></textarea>
+        <input type="submit" value="Post" @click="postReview">
       </div>
     </div>
     <FooterSection></FooterSection>
@@ -64,6 +64,10 @@ export default {
     return {
       course_name: '',
       reviews: [], // when reviews is updated, Vue re-renders the component
+      newReview: {
+        rating: null,
+        comment: '',
+      },
     };
   },
   beforeRouteEnter(to, from, next) { // fetch data when entering the route. Has to be outside of the methods functions
@@ -89,6 +93,42 @@ export default {
         console.error('Error fetching reviews:', error);
       }
     },
+    // create a new review for the course
+    async postReview() {
+      // validate that both rating and comment are present
+      if (!this.newReview.rating || !this.newReview.comment.trim()) {
+        alert("Please provide both a rating and a comment.");
+        return;
+      }
+      // send request by calling API
+      try {
+        const response = await axios.post(
+          `${process.env.VUE_APP_API_URL}/reviews/${this.$route.params.id}`, //params.id will be the course id
+          {
+            rating: this.newReview.rating,
+            comment: this.newReview.comment,
+          }
+        );
+        // add the new review to the reviews list to update the UI
+        this.reviews.push({
+          id: response.data.id || Date.now(), // use API response ID or a temporary one
+          rating: this.newReview.rating,
+          comment: this.newReview.comment,
+        });
+        // clear the input fields
+        this.newReview.rating = null;
+        this.newReview.comment = '';
+        // reset the rating background
+        document.querySelectorAll('.rate-box').forEach(box => {
+          box.classList.remove('selected');
+        });
+        alert("Review added successfully.");
+
+      } catch (error) {
+        console.error('Error posting review:', error);
+        alert("Failed to add review. Please try again.");
+      }
+    },
     // delete a specific review
     async deleteReview(review_id) {
       try {
@@ -112,6 +152,7 @@ export default {
       }
     },
     rate(rating) {
+      this.newReview.rating = rating;
       document.querySelectorAll('.rate-box').forEach(box => {
           box.classList.remove('selected');
       });
