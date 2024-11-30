@@ -140,15 +140,15 @@ class EC2(Stack):
                 'sudo yum install git -y',
                 'cd ./home/ec2-user',
                 f'git clone https://{os.getenv("USER")}:{os.getenv("TOKEN")}@github.com/wilnn/rate-my-courses-backend.git',
-                f'echo "export DBNAME={RDS.dbName}" >> /home/ec2-user/.bashrc',
+                f'echo "export DBNAME={RDS.dbName}" >> /home/ec2-user/.bashrc', # start adding environment variable permanently
                 f'echo "export DBPASSWORD={RDS.pw}" >> /home/ec2-user/.bashrc',
                 f'echo "export DBUSER={RDS.user}" >> /home/ec2-user/.bashrc',
                 f'echo "export DBPORT={RDS.port}" >> /home/ec2-user/.bashrc',
-                f'echo "export DBHOST={RDS.host}" >> /home/ec2-user/.bashrc',
+                f'echo "export DBHOST={RDS.host}" >> /home/ec2-user/.bashrc', 
                 'source /home/ec2-user/.bashrc',
                 'cd ./rate-my-courses-backend/ratemycourses-backend',
                 'pip3 install -r requirements.txt',
-                'python3 server.py',
+                'python3 app.py',
             ]
         
         self.RDS = RDS
