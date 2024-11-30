@@ -1,6 +1,5 @@
 .DS_Store
 node_modules
-/dist
 
 
 # local env files
@@ -25,7 +24,7 @@ pnpm-debug.log*
 
 # Node modules (for Vue.js frontend)
 node_modules/
-dist/
+
 npm-debug.log
 
 # Python virtual environment and package files (for Flask backend)

@@ -1,0 +1,17 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd ratemycourses-frontend
+        - yarn install
+    build:
+      commands:
+        - yarn build
+  artifacts:
+    baseDirectory: ratemycourses-frontend/dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - ratemycourses-frontend/node_modules/**/*
