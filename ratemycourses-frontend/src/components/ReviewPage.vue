@@ -26,7 +26,7 @@
           <div>
             <span>REVIEW</span>
             <span>{{ review.comment }}</span>
-            <button class="delete-button">
+            <button class="delete-button" @click="deleteReview(review.id)">
               <i class="fas fa-trash"></i>
             </button>
 
@@ -66,17 +66,37 @@ export default {
       reviews: [], // when reviews is updated, Vue re-renders the component
     };
   },
+  beforeRouteEnter(to, from, next) { // fetch data when entering the route. Has to be outside of the methods functions
+      //can not use this here because of scope. Use vm instead.
+      next(vm => {
+        vm.course_id = vm.$route.params.id;
+        vm.course_name = vm.$route.params.name;
+        vm.getReview(vm.$route.params.id);
+      });
+  },
   methods: {
-    async getReviewsData(id) { // use async because we need to wait for API response
+    // fetch all reviews data of that course_id
+    // use async because we need to wait for API response
+    async getReview(course_id) { 
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_URL}/reviews/${id}`);
-        this.reviews = Object.entries(response.data).map(([id, review]) => ({
-          "id": id,
-          "rating": review.rating,
-          "comment": review.comment,
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/reviews/${course_id}`);
+        this.reviews = response.data.map(review => ({
+          id: review.review_id,
+          rating: review.rating,
+          comment: review.comment,
         }));
       } catch(error) {
         console.error('Error fetching reviews:', error);
+      }
+    },
+    // delete a specific review
+    async deleteReview(review_id) {
+      try {
+        await axios.delete(`${process.env.VUE_APP_API_URL}/reviews/${review_id}`);
+        // Update UI after deletion
+        this.reviews = this.reviews.filter(review => review.id !== review_id);
+      } catch (error) {
+        console.error('Error deleting review:', error);
       }
     },
     calculateAverageRating() {
@@ -98,15 +118,7 @@ export default {
       for (let i = 1; i <= rating; i++) {
           document.getElementById('box' + i).classList.add('selected');
       }
-    }
-  },
-  beforeRouteEnter(to, from, next) { // fetch data when entering the route. Prevent delay on page load when using mounted()
-    console.log("finish")
-    next(vm => {
-      vm.getReviewsData(vm.$route.params.id); //can not use this here because of scope. Use vm instead.
-      vm.course_name = vm.$route.params.name;
-    });
-    
+    },
   }
 }
 </script>
