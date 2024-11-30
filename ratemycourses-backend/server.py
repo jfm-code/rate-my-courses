@@ -9,7 +9,7 @@ load_dotenv()
 
 # initialize Flask app
 app = Flask(__name__)
-CORS(app,  resources={r"/*": {"origins": os.getenv("FEDOMAIN")}})  # enable CORS for requests from the domain
+# CORS(app,  resources={r"/*": {"origins": os.getenv("FEDOMAIN")}})  # enable CORS for requests from the domain
 
 
 
