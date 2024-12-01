@@ -5,7 +5,6 @@ from aws_cdk import (
     CfnOutput,
     aws_iam as iam,
     aws_secretsmanager as secretsmanager,
-    CfnTag,
     RemovalPolicy,
     SecretValue,
 )
@@ -14,10 +13,33 @@ from constructs import Construct
 import os
 from dotenv import load_dotenv
 
+from aws_cdk import App as CdkApp, SecretValue, Stack
+from constructs import Construct
+from aws_cdk.aws_amplify_alpha import App as AmplifyApp, GitHubSourceCodeProvider
+
 load_dotenv()
 
-class RDS(Stack):
-    def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
+class AmplifyFrontendStack(Stack):
+    def __init__(self, scope: Construct, construct_id: str, ec2, **kwargs) -> None:
+        super().__init__(scope, construct_id, **kwargs)
+
+        # Define the Amplify App
+        amplify_app = AmplifyApp(
+            self, "RateMyCourses", # this "id" will be used as the Amplify app name
+            source_code_provider=GitHubSourceCodeProvider(
+                owner="jfm-code",
+                repository="rate-my-courses",
+                oauth_token=SecretValue.secrets_manager("jfm-PAT-token") # have to use AWS secret manager
+            )
+        )
+
+        # Add environment variables and branch
+        amplify_app.add_environment("VUE_APP_API_URL", f"https://{ec2.url}")
+        amplify_app.add_branch("dev-mi")
+        #amplify_app.add_branch("wiln-mainbranch")
+
+class RDSStack(Stack):
+    def __init__(self, scope: Construct, construct_id: str, **kwargs):
         super().__init__(scope, construct_id, **kwargs)
 
         # create the VPC
@@ -123,8 +145,8 @@ class RDS(Stack):
         #CfnOutput(self, "Password", value=f"{pw}")
         return instance.db_instance_endpoint_address, db_name, instance.db_instance_endpoint_port, user, pw
 
-class EC2(Stack):
-    def __init__(self, scope: Construct, construct_id: str, RDS, **kwargs) -> None:
+class EC2Stack(Stack):
+    def __init__(self, scope: Construct, construct_id: str, RDS, **kwargs):
         super().__init__(scope, construct_id, **kwargs)
 
         # command to run automatically right after the ec2 instance is created. The commands will be ran in order. 
@@ -196,4 +218,4 @@ class EC2(Stack):
 
         # Output Instance public url
         #CfnOutput(self, "InstancePublicDNS", value=f"https://{instance.instance_public_dns_name}")
-        return f"https://{instance.instance_public_dns_name}"
+        return instance.instance_public_dns_name
