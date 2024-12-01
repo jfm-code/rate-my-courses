@@ -149,10 +149,26 @@ class EC2Stack(Stack):
     def __init__(self, scope: Construct, construct_id: str, RDS, **kwargs):
         super().__init__(scope, construct_id, **kwargs)
 
-        # command to run automatically right after the ec2 instance is created. The commands will be ran in order. 
+        self.systemd = """
+            echo '[Unit]
+            Description=Flask Application
+            After=network.target
+
+            [Service]
+            User=ec2-user
+            WorkingDirectory=/home/ec2-user/rate-my-courses-backend/ratemycourses-backend
+            ExecStart=/usr/bin/python3 app.py
+            Restart=always
+
+            [Install]
+            WantedBy=multi-user.target' | sudo tee /etc/systemd/system/flask.service
+            """
+
+        # command to run automatically right after the ec2 instance is created. The commands will be ran in order.
         self.ec2Command = [
                 '#!/bin/bash',
                 'sudo yum update -y',
+                'sudo yum install postgresql -y',
                 'sudo yum install -y aws-cli',
                 'sudo yum install -y python3',
                 'sudo yum install -y python3-pip',
@@ -168,9 +184,12 @@ class EC2Stack(Stack):
                 f'echo "export DBPORT={RDS.port}" >> /home/ec2-user/.bashrc',
                 f'echo "export DBHOST={RDS.host}" >> /home/ec2-user/.bashrc', 
                 'source /home/ec2-user/.bashrc',
-                'cd ./rate-my-courses-backend/ratemycourses-backend',
-                'pip3 install -r requirements.txt',
-                'python3 app.py',
+                'cd /home/ec2-user/rate-my-courses-backend/ratemycourses-backend',
+                'pip install -r requirements.txt',
+                self.systemd,
+                'sudo systemctl daemon-reload',
+                'sudo systemctl enable flask',
+                'sudo systemctl start flask',
             ]
         
         self.RDS = RDS
