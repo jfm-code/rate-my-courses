@@ -2,8 +2,15 @@
 Create an .env file in the CDK directory and add the following environment variables:
 TOKEN=<Your github personal access token>
 USER=<Your Github user name>
+AWSKEYPAIR=<your AWS key pair for SSH access>
 
 Refer to: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic to know how to create the token
+
+Creating backend repo:
+1. Create a github repo name "rate-my-courses-backend"
+2. Git clone that repo into your local machine.
+3. Copy the entire "ratemycourses-backend" from the rate-my-courses repository into the cloned repo
+4. Commit and push the folder
 
 
 # Deploy:
