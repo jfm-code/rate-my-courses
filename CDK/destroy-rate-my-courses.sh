@@ -2,5 +2,5 @@
 
 set -e
 
-echo "Deleting Amplify stack..."
+echo "Deleting the web app..."
 yes | cdk destroy --all --app "python3 app.py"

@@ -30,7 +30,7 @@ fi
 echo "Synthesize CDK to create CloudFormation template..."
 cdk synth
 
-echo "Deploying the Amplify stack..."
+echo "Deploying the web app..."
 cdk deploy --all --require-approval never
 
 echo "Triggering the first Amplify build..."
