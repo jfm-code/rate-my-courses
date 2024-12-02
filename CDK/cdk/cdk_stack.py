@@ -163,10 +163,13 @@ class EC2Stack(Stack):
             [Install]
             WantedBy=multi-user.target' | sudo tee /etc/systemd/system/flask.service
             """
-
+        #print(f'git clone https://{os.getenv("GITHUBUSER")}:{os.getenv("GITHUBTOKEN")}@github.com/{os.getenv("GITHUBUSER")}/rate-my-courses-backend.git')
+        
         # command to run automatically right after the ec2 instance is created. The commands will be ran in order.
         self.ec2Command = [
                 '#!/bin/bash',
+                'LOG_FILE="/var/log/ec2-init.log"',  # Define a log file
+                'exec > >(tee -a $LOG_FILE) 2>&1',  # Redirect all output to log file and console
                 'sudo yum update -y',
                 'sudo yum install postgresql -y',
                 'sudo yum install -y aws-cli',
@@ -175,9 +178,10 @@ class EC2Stack(Stack):
                 'sudo yum install -y amazon-ssm-agent',  # Ensure SSM Agent is installed. need to install SSM agent to enable connection to the ec2 instance when using session manager on aws website
                 'sudo systemctl enable amazon-ssm-agent',  # Enable SSM Agent service
                 'sudo systemctl start amazon-ssm-agent',   # Start SSM Agent
+                'sudo yum remove python3-requests',
                 'sudo yum install git -y',
                 'cd ./home/ec2-user',
-                f'git clone https://{os.getenv("USER")}:{os.getenv("TOKEN")}@github.com/{os.getenv("USER")}/rate-my-courses-backend.git',
+                f'git clone https://{os.getenv("GITHUBUSER")}:{os.getenv("GITHUBTOKEN")}@github.com/{os.getenv("GITHUBUSER")}/rate-my-courses-backend.git',
                 f'echo "export DBNAME={RDS.dbName}" >> /home/ec2-user/.bashrc', # start adding environment variable permanently
                 f'echo "export DBPASSWORD={RDS.pw}" >> /home/ec2-user/.bashrc',
                 f'echo "export DBUSER={RDS.user}" >> /home/ec2-user/.bashrc',
