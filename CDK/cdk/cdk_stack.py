@@ -177,7 +177,7 @@ class EC2Stack(Stack):
                 'sudo systemctl start amazon-ssm-agent',   # Start SSM Agent
                 'sudo yum install git -y',
                 'cd ./home/ec2-user',
-                f'git clone https://{os.getenv("USER")}:{os.getenv("TOKEN")}@github.com/wilnn/rate-my-courses-backend.git',
+                f'git clone https://{os.getenv("USER")}:{os.getenv("TOKEN")}@github.com/{os.getenv("USER")}/rate-my-courses-backend.git',
                 f'echo "export DBNAME={RDS.dbName}" >> /home/ec2-user/.bashrc', # start adding environment variable permanently
                 f'echo "export DBPASSWORD={RDS.pw}" >> /home/ec2-user/.bashrc',
                 f'echo "export DBUSER={RDS.user}" >> /home/ec2-user/.bashrc',
@@ -228,7 +228,7 @@ class EC2Stack(Stack):
             #vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PUBLIC),
             security_group=self.RDS.ec2SecurityGroup,
             associate_public_ip_address=True,  # Ensures the instance gets a public IP
-            key_pair=ec2.KeyPair.from_key_pair_attributes(self, "KeyPair", key_pair_name="HN_key"), # replace key_pair_name with the name of your own keypair to ssh into the ec2 instance
+            key_pair=ec2.KeyPair.from_key_pair_attributes(self, "KeyPair", key_pair_name=os.getenv("AWSKEYPAIR")), # replace key_pair_name with the name of your own keypair to ssh into the ec2 instance
             role=role,
         )
 
