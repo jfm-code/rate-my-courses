@@ -45,7 +45,7 @@ class RDSStack(Stack):
         # create the VPC
         self.vpc = ec2.Vpc(
             self,
-            "group9Vpc",
+            "group9Vpc2",
             max_azs=2,  # Limit to 2 Availability Zones
             subnet_configuration=[
                 # Public Subnet Configuration
@@ -88,6 +88,12 @@ class RDSStack(Stack):
             peer=ec2.Peer.any_ipv4(),
             connection=ec2.Port.tcp(443),
             description="Allow HTTPS access from any ip address"
+        )
+
+        sec_group.add_ingress_rule(
+            ec2.Peer.any_ipv4(),  # Allow any IPv4 address
+            ec2.Port.tcp(80),  # Allow inbound HTTP traffic on port 80
+            "Allow HTTP traffic"
         )
         return sec_group
 
@@ -163,22 +169,21 @@ class EC2Stack(Stack):
             [Install]
             WantedBy=multi-user.target' | sudo tee /etc/systemd/system/flask.service
             """
-        #print(f'git clone https://{os.getenv("GITHUBUSER")}:{os.getenv("GITHUBTOKEN")}@github.com/{os.getenv("GITHUBUSER")}/rate-my-courses-backend.git')
         
+    
         # command to run automatically right after the ec2 instance is created. The commands will be ran in order.
         self.ec2Command = [
                 '#!/bin/bash',
                 'LOG_FILE="/var/log/ec2-init.log"',  # Define a log file
                 'exec > >(tee -a $LOG_FILE) 2>&1',  # Redirect all output to log file and console
                 'sudo yum update -y',
-                'sudo yum install postgresql -y',
+                'sudo yum install postgresql16 -y',
                 'sudo yum install -y aws-cli',
                 'sudo yum install -y python3',
                 'sudo yum install -y python3-pip',
                 'sudo yum install -y amazon-ssm-agent',  # Ensure SSM Agent is installed. need to install SSM agent to enable connection to the ec2 instance when using session manager on aws website
                 'sudo systemctl enable amazon-ssm-agent',  # Enable SSM Agent service
                 'sudo systemctl start amazon-ssm-agent',   # Start SSM Agent
-                'sudo yum remove python3-requests',
                 'sudo yum install git -y',
                 'cd ./home/ec2-user',
                 f'git clone https://{os.getenv("GITHUBUSER")}:{os.getenv("GITHUBTOKEN")}@github.com/{os.getenv("GITHUBUSER")}/rate-my-courses-backend.git',
@@ -195,6 +200,60 @@ class EC2Stack(Stack):
                 'sudo systemctl enable flask',
                 'sudo systemctl start flask',
             ]
+        
+        
+        
+        self.nginx = '''
+                    echo "server {" > /etc/nginx/conf.d/flask.conf
+                    echo '    listen 80;' >> /etc/nginx/conf.d/flask.conf
+                    echo '    server_name localhost;' >> /etc/nginx/conf.d/flask.conf
+                    echo '    location / {' >> /etc/nginx/conf.d/flask.conf
+                    echo '        proxy_pass http://127.0.0.1:5000;' >> /etc/nginx/conf.d/flask.conf
+                    echo '        proxy_set_header Host $host;' >> /etc/nginx/conf.d/flask.conf
+                    echo '        proxy_set_header X-Real-IP $remote_addr;' >> /etc/nginx/conf.d/flask.conf
+                    echo '        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' >> /etc/nginx/conf.d/flask.conf
+                    echo '        proxy_set_header X-Forwarded-Proto $scheme;' >> /etc/nginx/conf.d/flask.conf
+                    echo '    }' >> /etc/nginx/conf.d/flask.conf
+                    echo '}' >> /etc/nginx/conf.d/flask.conf'''
+        
+        self.ec2Command = [
+        '#!/bin/bash',
+        'LOG_FILE="/var/log/ec2-init.log"',  # Define a log file
+        'exec > >(tee -a $LOG_FILE) 2>&1',  # Redirect all output to log file and console
+        'sudo yum update -y',
+        'sudo yum install postgresql -y',
+        'sudo yum install -y aws-cli',
+        'sudo yum install -y python3',
+        'sudo yum install -y python3-pip',
+        'sudo yum install -y amazon-ssm-agent',  # Ensure SSM Agent is installed
+        'sudo systemctl enable amazon-ssm-agent',  # Enable SSM Agent service
+        'sudo systemctl start amazon-ssm-agent',   # Start SSM Agent
+        'sudo yum install git -y',
+        'sudo yum install nginx -y',  # Install Nginx
+        'cd ./home/ec2-user',
+        f'git clone https://{os.getenv("GITHUBUSER")}:{os.getenv("GITHUBTOKEN")}@github.com/{os.getenv("GITHUBUSER")}/rate-my-courses-backend.git',
+        f'echo "export DBNAME={RDS.dbName}" >> /home/ec2-user/.bashrc',  # Add environment variables
+        f'echo "export DBPASSWORD={RDS.pw}" >> /home/ec2-user/.bashrc',
+        f'echo "export DBUSER={RDS.user}" >> /home/ec2-user/.bashrc',
+        f'echo "export DBPORT={RDS.port}" >> /home/ec2-user/.bashrc',
+        f'echo "export DBHOST={RDS.host}" >> /home/ec2-user/.bashrc',
+        'source /home/ec2-user/.bashrc',
+        'cd /home/ec2-user/rate-my-courses-backend/ratemycourses-backend',
+        'pip install -r requirements.txt',
+        self.systemd,
+        'sudo systemctl daemon-reload',
+        'sudo systemctl enable flask',
+        'sudo systemctl start flask',
+        
+        # Nginx configuration setup
+        self.nginx,
+
+        # Restart and enable Nginx
+        'sudo systemctl restart nginx',  # Restart Nginx to apply changes
+        'sudo systemctl enable nginx',  # Enable Nginx to start on boot
+        'sudo systemctl start nginx',  # Start Nginx
+        ]
+        
         
         self.RDS = RDS
         self.url = self.create_ec2()
