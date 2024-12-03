@@ -35,8 +35,13 @@ class AmplifyFrontendStack(Stack):
 
         # Add environment variables and branch
         amplify_app.add_environment("VUE_APP_API_URL", f"https://{ec2.url}")
-        amplify_app.add_branch("dev-mi")
-        #amplify_app.add_branch("wiln-mainbranch")
+        amplify_app.add_branch("main")
+        CfnOutput(
+            self,
+            "RateMyCoursesAppURL",
+            value=f"https://main.{amplify_app.default_domain}",
+            description="The URL of the Amplify app"
+        )
 
 class RDSStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs):
@@ -94,6 +99,18 @@ class RDSStack(Stack):
             ec2.Peer.any_ipv4(),  # Allow any IPv4 address
             ec2.Port.tcp(80),  # Allow inbound HTTP traffic on port 80
             "Allow HTTP traffic"
+        )
+
+        sec_group.add_ingress_rule(
+            ec2.Peer.any_ipv4(),
+            connection=ec2.Port.tcp(8080),
+            description="Allow access to Flask on port 8080"
+        )
+
+        sec_group.add_ingress_rule(
+            ec2.Peer.any_ipv4(),
+            connection=ec2.Port.tcp(5000),
+            description="Allow access to Flask backend on port 5000"
         )
         return sec_group
 

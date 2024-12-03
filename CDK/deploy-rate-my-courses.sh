@@ -5,7 +5,10 @@ set -e
 GITHUB_TOKEN_NAME="jfm-PAT-token"
 GITHUB_PERSONAL_ACCESS_TOKEN="thisisjustaplaceholder"
 AMPLIFY_APP_NAME="RateMyCourses"
-GITHUB_BRANCH_NAME="dev-mi"
+GITHUB_BRANCH_NAME="main"
+
+echo "Sync the time to UTC..."
+sudo ntpdate ntp.ubuntu.com
 
 echo "Installing AWS CDK CLI..."
 sudo npm install -g aws-cdk > /dev/null 2>&1
@@ -39,5 +42,3 @@ aws amplify start-job \
     --app-id "$AMPLIFY_APP_ID" \
     --branch-name "$GITHUB_BRANCH_NAME" \
     --job-type RELEASE
-
-echo "Remember to migrate AWS Amplify to GitHub App integration via the AWS Console (we can't do this via CLI)."

@@ -4,6 +4,10 @@
     <div class="container">
       <h1>Rate My Courses</h1>
       <h2>Please choose an UML CS course to see the rating</h2>
+      <div class="add-course">
+        <input type="text" id="add-course-field" placeholder="Add a course here...">
+        <input type="submit" value="Create">
+      </div>
       <div class="course-list" v-if="courses.length > 0">
         <div class="card" v-for="course in courses" :key="course.id" @click="goToReview(course.id, course.name)">
           <p>
@@ -66,7 +70,7 @@ export default {
   background-position: center center;
   height: 43.6vh;
   background-attachment: fixed;
-  padding: 100px 0px 100px 0px;
+  padding: 50px 0px 130px 0px;
   color:white;
 }
 h1 {
@@ -98,5 +102,40 @@ h1 {
 }
 .card > p > span {
   margin:5px;
+}
+.add-course {
+  margin:50px 0px 20px 0px;
+}
+.add-course > input:nth-child(1) {
+  padding: 10px 20px;
+  background-color: transparent;
+  user-select: none;
+  border-color:cadetblue;
+  color: white;
+  border-style:solid none solid solid;
+  border-radius: 10px 0px 0px 10px;
+  font-size: medium;
+}
+.add-course > input:nth-child(1):focus {
+  outline: none;
+}
+input::placeholder {
+  color: white;
+}
+.add-course > input:nth-child(2) {
+  border-style: solid;
+  border-color: cadetblue;
+  background: cadetblue;
+  border-radius: 0px 10px 10px 0px;
+  padding: 10px 15px;
+  justify-items: center;
+  text-decoration: none;
+  color: white;
+  font-size: medium;
+}
+.add-course > input:nth-child(2):hover {
+  background-color: darkcyan;
+  border-color:darkcyan;
+  cursor: pointer;
 }
 </style>
