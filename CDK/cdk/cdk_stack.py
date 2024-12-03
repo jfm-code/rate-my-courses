@@ -50,7 +50,7 @@ class RDSStack(Stack):
         # create the VPC
         self.vpc = ec2.Vpc(
             self,
-            "group9Vpc2",
+            "group9Vpc",
             max_azs=2,  # Limit to 2 Availability Zones
             subnet_configuration=[
                 # Public Subnet Configuration
