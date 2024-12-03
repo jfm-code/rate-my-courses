@@ -7,9 +7,6 @@ GITHUB_PERSONAL_ACCESS_TOKEN="thisisjustaplaceholder"
 AMPLIFY_APP_NAME="RateMyCourses"
 GITHUB_BRANCH_NAME="main"
 
-echo "Sync the time to UTC..."
-sudo ntpdate ntp.ubuntu.com
-
 echo "Installing AWS CDK CLI..."
 sudo npm install -g aws-cdk > /dev/null 2>&1
 cdk --version
@@ -17,6 +14,9 @@ cdk --version
 echo "Installing Python dependencies..."
 pip install -r requirements.txt > /dev/null 2>&1
 pip install aws-cdk.aws-amplify-alpha > /dev/null 2>&1
+
+echo "Sync the time to UTC..."
+sudo ntpdate ntp.ubuntu.com
 
 echo "Creating GitHub token in AWS Secrets Manager if there isn't one already..."
 SECRET_EXISTS=$(aws secretsmanager describe-secret --secret-id "$GITHUB_TOKEN_NAME" --query "Name" --output text 2>/dev/null || echo "NOT_FOUND")
@@ -35,6 +35,9 @@ cdk synth
 
 echo "Deploying the web app..."
 cdk deploy --all --require-approval never
+
+echo "Sync the time to UTC..."
+sudo ntpdate ntp.ubuntu.com
 
 echo "Triggering the first Amplify build..."
 AMPLIFY_APP_ID=$(aws amplify list-apps --query "apps[?name=='$AMPLIFY_APP_NAME'].appId | [0]" --output text)

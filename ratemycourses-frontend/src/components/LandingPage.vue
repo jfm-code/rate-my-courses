@@ -5,8 +5,8 @@
       <h1>Rate My Courses</h1>
       <h2>Please choose an UML CS course to see the rating</h2>
       <div class="add-course">
-        <input type="text" id="add-course-field" placeholder="Add a course here...">
-        <input type="submit" value="Create">
+        <input type="text" id="add-course-field" placeholder="Add a course here..." v-model="newCourseName">
+        <input type="submit" value="Create" @click="addCourse">
       </div>
       <div class="course-list" v-if="courses.length > 0">
         <div class="card" v-for="course in courses" :key="course.id" @click="goToReview(course.id, course.name)">
@@ -35,6 +35,7 @@ export default {
   },
   data() { // Vue's reactivity system tracks changes to properties in the data
     return {
+      newCourseName: '',
       courses: [] // when courses is updated, Vue re-renders the component
     };
   },
@@ -51,6 +52,22 @@ export default {
         }));
       } catch(error) {
         console.error('Error fetching courses:', error);
+      }
+    },
+    async addCourse() {
+      if (!this.newCourseName.trim()) {
+        alert("Please enter a valid course name.")
+        return
+      }
+
+      try {
+        const response = await axios.post(`${process.env.VUE_APP_API_URL}/courses/${this.newCourseName}/create`);
+        console.log(response);
+        this.newCourseName = ''; // Clear input field
+        this.fetchCourseData(); // Refresh the course list
+      } catch (error) {
+        console.error('Error creating course:', error);
+        alert(error.response?.data?.message || 'Failed to create course.');
       }
     }
   },
@@ -81,8 +98,9 @@ h1 {
 }
 .course-list {
   display: grid;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: auto auto auto auto auto auto;
   justify-self: center;
+  width: 70%;
 }
 .card {
   background-color: white;
