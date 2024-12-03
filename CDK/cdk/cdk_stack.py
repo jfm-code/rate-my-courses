@@ -155,7 +155,7 @@ class EC2Stack(Stack):
     def __init__(self, scope: Construct, construct_id: str, RDS, **kwargs):
         super().__init__(scope, construct_id, **kwargs)
 
-        self.systemd = """
+        '''self.systemd = """
             echo '[Unit]
             Description=Flask Application
             After=network.target
@@ -199,7 +199,7 @@ class EC2Stack(Stack):
                 'sudo systemctl daemon-reload',
                 'sudo systemctl enable flask',
                 'sudo systemctl start flask',
-            ]
+            ]'''
         
         
         
@@ -221,7 +221,7 @@ class EC2Stack(Stack):
         'LOG_FILE="/var/log/ec2-init.log"',  # Define a log file
         'exec > >(tee -a $LOG_FILE) 2>&1',  # Redirect all output to log file and console
         'sudo yum update -y',
-        'sudo yum install postgresql -y',
+        'sudo yum install postgresql16 -y',
         'sudo yum install -y aws-cli',
         'sudo yum install -y python3',
         'sudo yum install -y python3-pip',
