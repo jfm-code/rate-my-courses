@@ -45,7 +45,7 @@ export default {
     },
     async fetchCourseData() { // use async because we need to wait for API response
       try {
-        const response = await axios.get(`${process.env.VUE_APP_API_URL}/courses`);
+        const response = await axios.get(`${process.env.VUE_APP_API_URL}/courses/`);
         this.courses = Object.entries(response.data).map(([id, name]) => ({
           id,
           name
