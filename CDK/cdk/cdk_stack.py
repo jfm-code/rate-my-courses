@@ -34,7 +34,7 @@ class AmplifyFrontendStack(Stack):
         )
 
         # Add environment variables and branch
-        amplify_app.add_environment("VUE_APP_API_URL", f"http://{ec2.url}")
+        amplify_app.add_environment("VUE_APP_API_URL", f"https://{ec2.url}")
         amplify_app.add_branch("main")
         CfnOutput(
             self,
@@ -188,51 +188,55 @@ class EC2Stack(Stack):
             """
         
         self.nginx = '''
-                    echo "server {" > /etc/nginx/conf.d/flask.conf
-                    echo '    listen 80;' >> /etc/nginx/conf.d/flask.conf
-                    echo '    server_name localhost;' >> /etc/nginx/conf.d/flask.conf
-                    echo '    location / {' >> /etc/nginx/conf.d/flask.conf
-                    echo '        proxy_pass http://127.0.0.1:5000;' >> /etc/nginx/conf.d/flask.conf
-                    echo '        proxy_set_header Host $host;' >> /etc/nginx/conf.d/flask.conf
-                    echo '        proxy_set_header X-Real-IP $remote_addr;' >> /etc/nginx/conf.d/flask.conf
-                    echo '        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' >> /etc/nginx/conf.d/flask.conf
-                    echo '        proxy_set_header X-Forwarded-Proto $scheme;' >> /etc/nginx/conf.d/flask.conf
-                    echo '    }' >> /etc/nginx/conf.d/flask.conf
-                    echo '}' >> /etc/nginx/conf.d/flask.conf'''
+            echo "server {" > /etc/nginx/conf.d/flask.conf
+            echo '    listen 443 ssl;' >> /etc/nginx/conf.d/flask.conf
+            echo '    server_name _;' >> /etc/nginx/conf.d/flask.conf
+            echo '    ssl_certificate /etc/nginx/ssl/nginx-selfsigned.crt;' >> /etc/nginx/conf.d/flask.conf
+            echo '    ssl_certificate_key /etc/nginx/ssl/nginx-selfsigned.key;' >> /etc/nginx/conf.d/flask.conf
+            echo '    location / {' >> /etc/nginx/conf.d/flask.conf
+            echo '        proxy_pass http://127.0.0.1:5000;' >> /etc/nginx/conf.d/flask.conf
+            echo '        proxy_set_header Host $host;' >> /etc/nginx/conf.d/flask.conf
+            echo '        proxy_set_header X-Real-IP $remote_addr;' >> /etc/nginx/conf.d/flask.conf
+            echo '        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' >> /etc/nginx/conf.d/flask.conf
+            echo '        proxy_set_header X-Forwarded-Proto $scheme;' >> /etc/nginx/conf.d/flask.conf
+            echo '    }' >> /etc/nginx/conf.d/flask.conf
+            echo '}' >> /etc/nginx/conf.d/flask.conf
+        '''
         
         self.ec2Command = [
-        '#!/bin/bash',
-        'LOG_FILE="/var/log/ec2-init.log"',  # Define a log file
-        'exec > >(tee -a $LOG_FILE) 2>&1',  # Redirect all output to log file and console
-        'sudo yum update -y',
-        'sudo yum install postgresql16 -y',
-        'sudo yum install -y aws-cli',
-        'sudo yum install -y python3',
-        'sudo yum install -y python3-pip',
-        'sudo yum install -y amazon-ssm-agent',  # Ensure SSM Agent is installed
-        'sudo systemctl enable amazon-ssm-agent',  # Enable SSM Agent service
-        'sudo systemctl start amazon-ssm-agent',   # Start SSM Agent
-        'sudo yum install git -y',
-        'sudo yum install nginx -y',  # Install Nginx
-        'cd ./home/ec2-user',
-        f'git clone https://{os.getenv("GITHUBUSER")}:{os.getenv("GITHUBTOKEN")}@github.com/{os.getenv("GITHUBUSER")}/rate-my-courses-backend.git',
-        f'echo "export DBNAME={RDS.dbName}" >> /home/ec2-user/.bashrc',  # Add environment variables
-        f'echo "export DBPASSWORD={RDS.pw}" >> /home/ec2-user/.bashrc',
-        f'echo "export DBUSER={RDS.user}" >> /home/ec2-user/.bashrc',
-        f'echo "export DBPORT={RDS.port}" >> /home/ec2-user/.bashrc',
-        f'echo "export DBHOST={RDS.host}" >> /home/ec2-user/.bashrc',
-        'source /home/ec2-user/.bashrc',
-        'cd /home/ec2-user/rate-my-courses-backend/ratemycourses-backend',
-        'pip install -r requirements.txt',
-        'nohup python3 app.py > flask.log 2>&1 &',
-        
-        # Nginx configuration setup
-        self.nginx,
-
-        # Restart and enable Nginx
-        'sudo systemctl restart nginx',  # Restart Nginx to apply changes
-        'sudo systemctl enable nginx',  # Enable Nginx to start on boot
-        'sudo systemctl start nginx',  # Start Nginx
+            '#!/bin/bash',
+            'LOG_FILE="/var/log/ec2-init.log"',  # Define a log file
+            'exec > >(tee -a $LOG_FILE) 2>&1',  # Redirect all output to log file and console
+            'sudo yum update -y',
+            'sudo yum install postgresql16 -y',
+            'sudo yum install -y aws-cli',
+            'sudo yum install -y python3',
+            'sudo yum install -y python3-pip',
+            'sudo yum install -y amazon-ssm-agent',  # Ensure SSM Agent is installed
+            'sudo systemctl enable amazon-ssm-agent',  # Enable SSM Agent service
+            'sudo systemctl start amazon-ssm-agent',   # Start SSM Agent
+            'sudo yum install git -y',
+            'sudo yum install nginx -y',  # Install Nginx
+            'cd ./home/ec2-user',
+            f'git clone https://{os.getenv("GITHUBUSER")}:{os.getenv("GITHUBTOKEN")}@github.com/{os.getenv("GITHUBUSER")}/rate-my-courses-backend.git',
+            f'echo "export DBNAME={RDS.dbName}" >> /home/ec2-user/.bashrc',  # Add environment variables
+            f'echo "export DBPASSWORD={RDS.pw}" >> /home/ec2-user/.bashrc',
+            f'echo "export DBUSER={RDS.user}" >> /home/ec2-user/.bashrc',
+            f'echo "export DBPORT={RDS.port}" >> /home/ec2-user/.bashrc',
+            f'echo "export DBHOST={RDS.host}" >> /home/ec2-user/.bashrc',
+            'source /home/ec2-user/.bashrc',
+            'cd /home/ec2-user/rate-my-courses-backend/ratemycourses-backend',
+            'pip install -r requirements.txt',
+            # Generate SSL Certificate
+            'sudo mkdir -p /etc/nginx/ssl',
+            'sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx-selfsigned.key -out /etc/nginx/ssl/nginx-selfsigned.crt -subj "/CN=localhost"',
+            # Nginx configuration setup
+            self.nginx,
+            'nohup python3 app.py > flask.log 2>&1 &',
+            # Restart and enable Nginx
+            'sudo systemctl restart nginx',  # Restart Nginx to apply changes
+            'sudo systemctl enable nginx',  # Enable Nginx to start on boot
+            'sudo systemctl start nginx',  # Start Nginx
         ]
 
 
