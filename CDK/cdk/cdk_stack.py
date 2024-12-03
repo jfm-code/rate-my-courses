@@ -34,7 +34,7 @@ class AmplifyFrontendStack(Stack):
         )
 
         # Add environment variables and branch
-        amplify_app.add_environment("VUE_APP_API_URL", f"https://{ec2.url}")
+        amplify_app.add_environment("VUE_APP_API_URL", f"http://{ec2.url}")
         amplify_app.add_branch("main")
         CfnOutput(
             self,
@@ -172,7 +172,7 @@ class EC2Stack(Stack):
     def __init__(self, scope: Construct, construct_id: str, RDS, **kwargs):
         super().__init__(scope, construct_id, **kwargs)
 
-        '''self.systemd = """
+        self.systemd = """
             echo '[Unit]
             Description=Flask Application
             After=network.target
@@ -186,39 +186,6 @@ class EC2Stack(Stack):
             [Install]
             WantedBy=multi-user.target' | sudo tee /etc/systemd/system/flask.service
             """
-        
-    
-        # command to run automatically right after the ec2 instance is created. The commands will be ran in order.
-        self.ec2Command = [
-                '#!/bin/bash',
-                'LOG_FILE="/var/log/ec2-init.log"',  # Define a log file
-                'exec > >(tee -a $LOG_FILE) 2>&1',  # Redirect all output to log file and console
-                'sudo yum update -y',
-                'sudo yum install postgresql16 -y',
-                'sudo yum install -y aws-cli',
-                'sudo yum install -y python3',
-                'sudo yum install -y python3-pip',
-                'sudo yum install -y amazon-ssm-agent',  # Ensure SSM Agent is installed. need to install SSM agent to enable connection to the ec2 instance when using session manager on aws website
-                'sudo systemctl enable amazon-ssm-agent',  # Enable SSM Agent service
-                'sudo systemctl start amazon-ssm-agent',   # Start SSM Agent
-                'sudo yum install git -y',
-                'cd ./home/ec2-user',
-                f'git clone https://{os.getenv("GITHUBUSER")}:{os.getenv("GITHUBTOKEN")}@github.com/{os.getenv("GITHUBUSER")}/rate-my-courses-backend.git',
-                f'echo "export DBNAME={RDS.dbName}" >> /home/ec2-user/.bashrc', # start adding environment variable permanently
-                f'echo "export DBPASSWORD={RDS.pw}" >> /home/ec2-user/.bashrc',
-                f'echo "export DBUSER={RDS.user}" >> /home/ec2-user/.bashrc',
-                f'echo "export DBPORT={RDS.port}" >> /home/ec2-user/.bashrc',
-                f'echo "export DBHOST={RDS.host}" >> /home/ec2-user/.bashrc', 
-                'source /home/ec2-user/.bashrc',
-                'cd /home/ec2-user/rate-my-courses-backend/ratemycourses-backend',
-                'pip install -r requirements.txt',
-                self.systemd,
-                'sudo systemctl daemon-reload',
-                'sudo systemctl enable flask',
-                'sudo systemctl start flask',
-            ]'''
-        
-        
         
         self.nginx = '''
                     echo "server {" > /etc/nginx/conf.d/flask.conf
@@ -257,10 +224,7 @@ class EC2Stack(Stack):
         'source /home/ec2-user/.bashrc',
         'cd /home/ec2-user/rate-my-courses-backend/ratemycourses-backend',
         'pip install -r requirements.txt',
-        self.systemd,
-        'sudo systemctl daemon-reload',
-        'sudo systemctl enable flask',
-        'sudo systemctl start flask',
+        'nohup python3 app.py > flask.log 2>&1 &',
         
         # Nginx configuration setup
         self.nginx,
@@ -270,11 +234,11 @@ class EC2Stack(Stack):
         'sudo systemctl enable nginx',  # Enable Nginx to start on boot
         'sudo systemctl start nginx',  # Start Nginx
         ]
-        
-        
+
+
         self.RDS = RDS
         self.url = self.create_ec2()
-    
+
     def create_ec2(self):
         '''# Create Key Pair
         # https://docs.aws.amazon.com/cdk/api/v2/python/aws_cdk.aws_ec2/CfnKeyPair.html
