@@ -12,7 +12,6 @@ def get_db_connection():
             user=os.getenv("DBUSER"),
             password=os.getenv("DBPASSWORD")
         )
-        print("Databse info:", os.getenv("DBHOST"), os.getenv("DBPORT"), os.getenv("DBNAME"), os.getenv("DBUSER"), os.getenv("DBPASSWORD"))
         return conn
     except Exception as e:
         print(f"Error connecting to the database: {e}")

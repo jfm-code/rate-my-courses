@@ -48,7 +48,7 @@ Create .env file for the DBHOST, DBNAME, DBUSER, DBPASSWORD, DBPORT and put in t
 - ```config.py``` and ```database.py```: they are used to config and connect to database
 - ```routes/```: this folder stores the create of APIs. For example ```course_routes.py``` stores the GET, POST, DELETE,... methods related to courses (create a new course, get course information, delete a course,...)
 
-## Host Backend on EC2
+## Host Backend on EC2 (manually via AWS UI/Console)
 - Step 1: Make sure the frontend is working first
 - Step 2: Launch an EC2 instance, download the .pem file
 - Step 3: Add a security rule a rule to allow inbound rule SSH - TCP - port 22 and 5000 (source 0.0.0.0/0)

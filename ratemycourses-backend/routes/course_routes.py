@@ -68,21 +68,22 @@ def create_courses(course_name):
 
     create_query = '''
     INSERT INTO courses (course_title) 
-    VALUES (%s);
+    VALUES (%s) RETURNING course_id;
     '''
     cur.execute(check_query, (course_name,))
     conn.commit()
-    result = cur.fetchone()
+    course = cur.fetchone()
 
-    if result:
+    if course:
         cur.close()
         conn.close()
         return jsonify({"message": "This course already exist in the database"}), 409
     
     cur.execute(create_query, (course_name,))
+    course_id = cur.fetchone()[0]
     conn.commit()
     cur.close()
     conn.close()
 
-    return jsonify({"message": "The course was created successfully"}), 200
+    return jsonify({"message": "The course was created successfully", "course_id": course_id}), 200
 

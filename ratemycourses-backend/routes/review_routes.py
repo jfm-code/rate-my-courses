@@ -57,14 +57,15 @@ def post_review(course_id):
     # add a new review for the given course_id
     insert_query = """
     INSERT INTO reviews (course_id, rating, comment) 
-    VALUES (%s, %s, %s);
+    VALUES (%s, %s, %s) RETURNING review_id;
     """
     cur.execute(insert_query, (course_id, rating, comment))
+    review_id = cur.fetchone()[0]  # fetchone() retrieves the first row, and [0] accesses the review_id
     conn.commit()
 
     cur.close()
     conn.close()
-    return jsonify({"message": "Review added successfully"}), 201
+    return jsonify({"message": "Review added successfully", "review_id": review_id}), 201
 
 @review_bp.route("/<review_id>", methods=['DELETE'])
 def delete_review(review_id):

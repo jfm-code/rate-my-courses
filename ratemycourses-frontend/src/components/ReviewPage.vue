@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div >
     <NavigationBar></NavigationBar>
-    <div class="course-info">
+    <div class="course-info" >
       <div>
         <h1><a href="https://www.uml.edu/catalog/courses/COMP/1020">{{ course_name }}</a></h1>
         <div>
@@ -111,7 +111,7 @@ export default {
         );
         // add the new review to the reviews list to update the UI
         this.reviews.push({
-          id: response.data.id || Date.now(), // use API response ID or a temporary one
+          id: response.data.review_id || Date.now(), // use API response ID or a temporary one
           rating: this.newReview.rating,
           comment: this.newReview.comment,
         });
@@ -165,6 +165,9 @@ export default {
 </script>
 
 <style scoped>
+* {
+  
+}
 h1 {
   font-size: 40px;
 }

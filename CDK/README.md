@@ -1,4 +1,12 @@
-# Before Deploying:
+# CI/CD for RateMyCourses with AWS CDK
+
+- The idea of using CDK is to create AWS resources using CloudFormation template.
+- Inside the ```CDK/cdk/``` folder is the ```cdk_stack.py``` file which handles the creation of Amplify, EC2 and RDS. The app.py is used to call functions in ```cdk_stack.py``` to be executed, to create a Cloudformation template.
+- The 2 scripts using to automate the process is ```deploy-app.sh``` and ```destroy-app.sh```
+
+## Backend & Database (EC2 & RDS)
+
+### Before Deploying:
 Create an .env file in the CDK directory and add the following environment variables:
 TOKEN=<Your github personal access token>
 USER=<Your Github user name>
@@ -6,36 +14,35 @@ AWSKEYPAIR=<your AWS key pair for SSH access>
 
 Refer to: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic to know how to create the token
 
-Creating a backend repo:
-1. Create a github repo name "rate-my-courses-backend"
-2. Git clone that repo into your local machine.
-3. Copy the entire "ratemycourses-backend" from the rate-my-courses repository into the cloned repo
-4. Commit and push the folder
-
-# Deploy:
-chmod +x deploy-rate-my-courses.sh
-./deploy-rate-my-courses.sh
-
-
-# Destroy:
-chmod +x destroy-rate-my-courses.sh
-./destroy-rate-my-courses.sh
-
-# NOTE:
-If receive an error such as: -bash: "./deploy-rate-my-courses.sh: /bin/bash^M: bad interpreter: No such file or directory"
+### Deploy:
+```
+chmod +x deploy-app.sh
+./deploy-app.sh
+```
+### Destroy:
+```
+chmod +x destroy-app.sh
+./destroy-app.sh
+```
+### Note:
+If receive an error such as: 
+```
+-bash: "./deploy-app.sh: /bin/bash^M: bad interpreter: No such file or directory"
+```
 Then do:
+```
 sudo apt install dos2unix
-dos2unix deploy-rate-my-courses.sh
-The same problem can happen when running ./destroy-rate-my-courses.sh
+dos2unix deploy-app.sh
+```
+The same problem can happen when running ```./destroy-app.sh```
 
-# Debugging EC2 commands in user data:
-If you believe that a command in user data do not work, then SSH into the ec2 instance and do sudo cat /var/log/ec2-init.log to look at the log information. There you will see the status of each command that was executed.
+### Debugging EC2 commands in user data:
+If you believe that a command in user data do not work, then SSH into the ec2 instance and do ```sudo cat /var/log/ec2-init.log``` to look at the log information. There you will see the status of each command that was executed.
 
 
+## Frontend (Amplify)
 
-# CI/CD for RateMyCourses with AWS CDK
-
-## Useful commands
+### Useful commands
  * `cdk ls`          list all stacks in the app
  * `cdk synth`       emits the synthesized CloudFormation template
  * `cdk deploy`      deploy this stack to your default AWS account/region
@@ -44,10 +51,10 @@ If you believe that a command in user data do not work, then SSH into the ec2 in
 
 First of all, you should use Linux Ubuntu instead of Bash, it's easier to use AWS CLI. Trust me.
 
-## Automate (fully) frontend deployment with CDK (using Bash script)
+### Automate (fully) frontend deployment with CDK (using Bash script)
 - Step 1: Go to the ```cdk-deployment/``` folder, make the Bash script executable with ```chmod +x create-frontend.sh```
 - Step 2: Create the Amplify frontend with ```./create-frontend.sh```
-- Step 3: The only manual step. Migrate AWS Amplify to Github App via AWS Console (connect your Github account to Amplify to authorize the access to the repo). Right now it does not support migrating to the GitHub App integration via the CLI.
+- Step 3: The only manual step (but it's not required, Amplify recommend us to do it). Migrate AWS Amplify to Github App via AWS Console (connect your Github account to Amplify to authorize the access to the repo). Right now it does not support migrating to the GitHub App integration via the CLI.
 - Step 4: Delete the Amplify frontend (when done using) with ```cdk destroy```
 
 ## Automate (partially) frontend deployment with CDK (without using Bash script)
@@ -87,6 +94,6 @@ aws amplify start-job \
     --branch-name "$AMPLIFY_BRANCH_NAME" \
     --job-type RELEASE
 ```
-- Step 8: The only manual step. Migrate AWS Amplify to Github App via AWS Console (connect your Github account to Amplify to authorize the access to the repo). Right now it does not support migrating to the GitHub App integration via the CLI.
+- Step 8: The only manual step (but it's not required, Amplify recommend us to do it). Migrate AWS Amplify to Github App via AWS Console (connect your Github account to Amplify to authorize the access to the repo). Right now it does not support migrating to the GitHub App integration via the CLI.
 
 - Step 9: To delete the Amplify stack, do ```cdk destroy```

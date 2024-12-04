@@ -22,7 +22,7 @@ npm install -g serve (to check after yarn build, before put in AWS)
 ## Note
 - Add VUE_APP_API_URL in the .env file (this is the URL of the backend endpoint)
 
-## Deploy Frontend on AWS Amplify
+## Deploy Frontend on AWS Amplify (manually via AWS UI/Console)
 - Step 1: Build the frontend with ```yarn build``` (this command will create a dist folder inside frontend folder)
 - Step 2: Verify the frontend to see if it works as expected after building with ```serve -s dist```. To use this command we need to install with ```yarn global add serve```
 - Step 3: Push the ```dist``` folder that we just created in the git branch that we want to deploy with.

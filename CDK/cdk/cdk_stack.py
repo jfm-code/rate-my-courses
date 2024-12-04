@@ -19,7 +19,7 @@ from aws_cdk.aws_amplify_alpha import App as AmplifyApp, GitHubSourceCodeProvide
 
 load_dotenv()
 
-class AmplifyFrontendStack(Stack):
+class AmplifyStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, ec2, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
 
@@ -161,11 +161,6 @@ class RDSStack(Stack):
             credentials=rds.Credentials.from_secret(secret),  # Use the Secrets Manager secret for password and user name
         )
 
-        #CfnOutput(self, "Host", value=f"{instance.db_instance_endpoint_address}")
-        #CfnOutput(self, "Database name", value=f"{db_name}")
-        #CfnOutput(self, "Port", value=f"{instance.db_instance_endpoint_port}")
-        #CfnOutput(self, "Username", value=f"{user}")
-        #CfnOutput(self, "Password", value=f"{pw}")
         return instance.db_instance_endpoint_address, db_name, instance.db_instance_endpoint_port, user, pw
 
 class EC2Stack(Stack):
@@ -218,14 +213,14 @@ class EC2Stack(Stack):
             'sudo yum install git -y',
             'sudo yum install nginx -y',  # Install Nginx
             'cd ./home/ec2-user',
-            f'git clone https://{os.getenv("GITHUBUSER")}:{os.getenv("GITHUBTOKEN")}@github.com/{os.getenv("GITHUBUSER")}/rate-my-courses-backend.git',
+            f'git clone https://{os.getenv("GITHUBUSER")}:{os.getenv("GITHUBTOKEN")}@github.com/{os.getenv("GITHUBUSER")}/rate-my-courses.git',
             f'echo "export DBNAME={RDS.dbName}" >> /home/ec2-user/.bashrc',  # Add environment variables
             f'echo "export DBPASSWORD={RDS.pw}" >> /home/ec2-user/.bashrc',
             f'echo "export DBUSER={RDS.user}" >> /home/ec2-user/.bashrc',
             f'echo "export DBPORT={RDS.port}" >> /home/ec2-user/.bashrc',
             f'echo "export DBHOST={RDS.host}" >> /home/ec2-user/.bashrc',
             'source /home/ec2-user/.bashrc',
-            'cd /home/ec2-user/rate-my-courses-backend/ratemycourses-backend',
+            'cd /home/ec2-user/rate-my-courses/ratemycourses-backend',
             'pip install -r requirements.txt',
             # Generate SSL Certificate
             'sudo mkdir -p /etc/nginx/ssl',
@@ -234,9 +229,9 @@ class EC2Stack(Stack):
             self.nginx,
             'nohup python3 app.py > flask.log 2>&1 &',
             # Restart and enable Nginx
-            'sudo systemctl restart nginx',  # Restart Nginx to apply changes
-            'sudo systemctl enable nginx',  # Enable Nginx to start on boot
-            'sudo systemctl start nginx',  # Start Nginx
+            'sudo systemctl restart nginx',
+            'sudo systemctl enable nginx',
+            'sudo systemctl start nginx',
         ]
 
 
