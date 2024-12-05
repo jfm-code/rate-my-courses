@@ -10,7 +10,6 @@ load_dotenv()
 # initialize Flask app
 app = Flask(__name__)
 CORS(app)
-# CORS(app, origins=["http://localhost:8080", "http://localhost:3000"])
 # CORS(app,  resources={r"/*": {"origins": os.getenv("FEDOMAIN")}})  # enable CORS for requests from the domain host in frontend
 
 # Register blueprints
@@ -20,4 +19,4 @@ app.register_blueprint(course_bp, url_prefix="/courses")
 app.register_blueprint(review_bp, url_prefix="/reviews")  
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
