@@ -4,7 +4,24 @@
 - Inside the ```CDK/cdk/``` folder is the ```cdk_stack.py``` file which handles the creation of Amplify, EC2 and RDS. The app.py is used to call functions in ```cdk_stack.py``` to be executed, to create a Cloudformation template.
 - The 2 scripts using to automate the process is ```deploy-app.sh``` and ```destroy-app.sh```
 
-## Backend & Database (EC2 & RDS)
+
+
+## Deploy the entire website to AWS using CDK:
+
+### NOTE: 
+- AWS CDK works by creating the templates from code and deploying the templates as stacks to AWS cloud formation to create AWS infrastructure. This means multiple AWS resources within the same stack and also in different stacks will be created at the same time. This will create a problem because sometimes you will need the credentials from an AWS resource in order to create/run another AWS resource properly, but the credentials of an AWS resource will not exist until that resource is successfully created. In our case, the back end in EC2 will need the credentials of the RDS database such as host, port, username, password, etc., and amplify needs the endpoint of the EC2 instance in order to send requests. One way to fix it is to add the credentials to the back end and front end manually once it finished deploying but there should be a better way to automate it.
+- Solution: It can be solved by imposing dependency. This can be done by storing the credentials to the attributes inside a stack class and then referencing those attributes in other parts of your code. When AWS CDK sees this, it will know that the other part of your code depends on these credentials and will assign the correct credential information to that part of your CDK code. This can also be done by stack cross reference, which is passing an object that represents a stack to another stack (refer to app.py for example). Doing this will impose the dependency and CDK will know what stack it will have to create first.
+ 
+### CDK deployment details:
+AWS CDK will look at the code and create 3 different stacks in order:
+#### The first stack:
+The first stack will create a VPC that have 2 subnets, 1 private and 1 public subnet. Then, it create the security group for the EC2 instance which allows SSH, HTTP (HTTP access will be removed in the future for security reasons), and HTTPS requests. I will also create a security group for the RDS database which only allow any EC2 instance that attach to the previously created EC2 secuity group to access the RDS database that will attach to this RDS security group. Finally, it create the RDS database instance and add the database to the private subnet of the newly created VPC to ensure that no one can access it from the public internet.
+
+#### The second stack:
+The second stack will create an EC2 instance, attach the EC2 security group created earlier to this EC2 instance to make sure that it can access the RDS database. Then, run the commands in the user data to download dependencies, git clone the back end, download the Nginx web server to enable https access and reverse proxy which will forward the HTTPS request from the front end to the Flask server. Finally, run the Flask server and the Nginx web server.
+
+#### The third stack:
+The third stack will deploy the front end to AWS Amplify from the Github repo. 
 
 ### Before Deploying:
 Create an .env file in the CDK directory and add the following environment variables:
@@ -38,6 +55,8 @@ The same problem can happen when running ```./destroy-app.sh```
 
 ### Debugging EC2 commands in user data:
 If you believe that a command in user data do not work, then SSH into the ec2 instance and do ```sudo cat /var/log/ec2-init.log``` to look at the log information. There you will see the status of each command that was executed.
+
+
 
 
 ## Frontend (Amplify)
