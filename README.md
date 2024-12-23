@@ -9,6 +9,7 @@
     -  **Flask (Python)** for the backend
     - **PostgreSQL** for the database. 
 - The application is hosted on **AWS** and implemented CI/CD for automated build and deployment, using AWS services such as **Amplify** to host the frontend, **EC2** to host the backend, **RDS** to host database, and **CDK** to automate the CI/CD via CLI (there's no need to use the UI/Console of AWS at all).
+- Demo video: https://www.youtube.com/watch?v=1qdlbfD80E0
 
 ## Project Setup
 - ```ratemycourses-frontend/```: folder that stores all files related to the frontend, contains the ```dist``` that will be used for Amplify.
