@@ -1,5 +1,14 @@
 
 # RateMyCourses Website
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D) &nbsp; &nbsp; &nbsp;
+![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white) &nbsp; &nbsp; &nbsp;
+![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white) &nbsp; &nbsp; &nbsp;
+![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white) &nbsp; &nbsp; &nbsp;
+![AWSCDK](https://img.shields.io/badge/AWS%20CDK-%23000.svg?style=for-the-badge) &nbsp; &nbsp; &nbsp; 
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E) &nbsp; &nbsp; &nbsp; 
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white) &nbsp; &nbsp; &nbsp; 
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white) &nbsp; &nbsp; &nbsp; 
+![Python](https://img.shields.io/badge/Python-3.12-orange?style=for-the-badge&logo=PYTHON&logoColor=ffdd54&labelColor=3670A0) 
 
 ## Overview
 
